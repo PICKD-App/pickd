@@ -1,0 +1,86 @@
+/* =========================================================
+   PICKD – Layout Betreiber-Bereich
+   ========================================================= */
+.leise { color: var(--farbe-text-leise); }
+.klein { font-size: 12.5px; }
+code { background: var(--farbe-primaer-hell); padding: 1px 5px; border-radius: 4px; font-size: .92em; }
+
+/* Login */
+.login { max-width: 360px; margin: 40px auto; padding: 28px 24px; display: grid; gap: 10px; text-align: center; }
+.login-logo { width: 64px; height: 64px; margin: 0 auto; }
+.login h1 { font-size: 22px; }
+.login p { margin: 0; }
+.login label { text-align: left; font-weight: 600; font-size: 13px; margin-top: 8px; }
+.login .eingabe { border-radius: var(--radius-klein); }
+.fehler { color: var(--farbe-leer); font-size: 13px; margin: 0; }
+
+/* Tabs */
+.tabs { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 16px; padding-bottom: 2px; }
+.tabs button {
+  flex: 0 0 auto; padding: 9px 14px; border-radius: 999px; border: 1px solid var(--farbe-rand);
+  background: var(--farbe-karte); font-weight: 600; font-size: 14px;
+}
+.tabs button[aria-selected="true"] { background: var(--farbe-primaer); color: #fff; border-color: var(--farbe-primaer); }
+
+.abschnitt { padding: 16px; margin-bottom: 14px; }
+.abschnitt-kopf { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.abschnitt h2 { font-size: 17px; }
+
+/* Kennzahlen */
+.kpis { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 14px; }
+@media (min-width: 800px) { .kpis { grid-template-columns: repeat(4, 1fr); } }
+.kpi { padding: 14px 16px; }
+.kpi .wert { font-size: 24px; font-weight: 800; margin-top: 2px; font-variant-numeric: tabular-nums; }
+.kpi .titel { font-size: 12.5px; color: var(--farbe-text-leise); font-weight: 600; }
+.kpi .unter { font-size: 12px; color: var(--farbe-text-leise); }
+.kpi.warnung .wert { color: var(--farbe-leer); }
+
+.zwei-spalten { display: grid; gap: 14px; }
+@media (min-width: 900px) { .zwei-spalten { grid-template-columns: 1fr 1fr; } }
+
+.tabelle-huelle { overflow-x: auto; }
+.tabelle input[type="number"] {
+  width: 76px; padding: 5px 7px; border: 1px solid var(--farbe-rand); border-radius: 6px;
+  text-align: right; background: var(--farbe-hintergrund);
+}
+.tabelle input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--farbe-primaer); }
+.tabelle td.mitte, .tabelle th.mitte { text-align: center; }
+.geaendert { background: color-mix(in srgb, var(--farbe-akzent) 25%, transparent) !important; }
+
+/* Füllstand-Balken */
+.fuell { height: 8px; border-radius: 4px; background: var(--farbe-rand); overflow: hidden; min-width: 60px; }
+.fuell > i { display: block; height: 100%; border-radius: 4px; }
+.fuell > i.ok { background: var(--farbe-ok); } .fuell > i.fast { background: var(--farbe-fast); } .fuell > i.leer { background: var(--farbe-leer); }
+
+.bestand-zeile { display: grid; grid-template-columns: 28px 1fr 90px 54px auto; gap: 10px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--farbe-rand); font-size: 14px; }
+.bestand-zeile:last-child { border-bottom: none; }
+.bestand-zeile .anz { text-align: right; font-variant-numeric: tabular-nums; color: var(--farbe-text-leise); }
+@media (max-width: 480px) { .bestand-zeile { grid-template-columns: 24px 1fr 60px 44px; } .bestand-zeile .status { display: none; } }
+
+.packliste { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; }
+.packliste li { display: flex; justify-content: space-between; gap: 8px; padding: 6px 10px; background: var(--farbe-hintergrund); border-radius: 6px; }
+
+/* Diagramme (einfache Balken, ohne extra Bibliothek) */
+.saeulen { display: flex; align-items: flex-end; gap: 4px; height: 180px; padding-top: 18px; }
+.saeule { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; min-width: 0; }
+.saeule .balken { width: 100%; max-width: 38px; background: var(--farbe-primaer); border-radius: 5px 5px 0 0; position: relative; min-height: 2px; }
+.saeule .balken.wochenende { background: color-mix(in srgb, var(--farbe-primaer) 55%, white); }
+.saeule .balken.heute { background: var(--farbe-akzent); }
+.saeule .wert { font-size: 10px; color: var(--farbe-text-leise); margin-bottom: 2px; white-space: nowrap; }
+.saeule .beschr { font-size: 10.5px; color: var(--farbe-text-leise); margin-top: 4px; white-space: nowrap; }
+
+.hbalken { display: grid; gap: 8px; }
+.hbalken .zeile { display: grid; grid-template-columns: minmax(90px, 38%) 1fr auto; gap: 10px; align-items: center; font-size: 13.5px; }
+.hbalken .zeile .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hbalken .spur { height: 14px; background: var(--farbe-hintergrund); border-radius: 4px; overflow: hidden; }
+.hbalken .spur > i { display: block; height: 100%; background: var(--farbe-primaer); border-radius: 4px; }
+.hbalken .zahl { font-variant-numeric: tabular-nums; font-weight: 600; min-width: 64px; text-align: right; }
+
+.auswahl { padding: 7px 12px; border-radius: 999px; border: 1px solid var(--farbe-rand); background: var(--farbe-karte); }
+
+/* Meldung unten */
+.toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 2000;
+  background: var(--farbe-text); color: #fff; padding: 11px 18px; border-radius: 999px;
+  font-size: 14px; box-shadow: var(--schatten); max-width: calc(100vw - 32px);
+}

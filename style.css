@@ -1,0 +1,208 @@
+/* =========================================================
+   PICKD – Layout (Farben & Schrift kommen aus theme.css)
+   ========================================================= */
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  font-family: var(--schrift);
+  background: var(--farbe-hintergrund);
+  color: var(--farbe-text);
+  font-size: 15px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { font-family: var(--schrift-titel); line-height: 1.2; margin: 0; }
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+a { color: var(--farbe-primaer); }
+.versteckt { display: none !important; }
+
+/* ---------- Kopfzeile ---------- */
+.kopf {
+  position: sticky; top: 0; z-index: 1000;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 16px;
+  background: var(--farbe-primaer); color: #fff;
+}
+.marke { display: flex; align-items: center; gap: 10px; color: inherit; text-decoration: none; }
+.marke img { height: 38px; width: auto; display: block; }
+.marke-name { font-weight: 800; font-size: 22px; letter-spacing: -.01em; line-height: 1; display: block; }
+.marke-akzent { color: var(--farbe-akzent); }
+.marke-slogan { font-size: 11px; opacity: .85; display: block; font-weight: 400; letter-spacing: .32em; margin-top: 3px; }
+.kopf-link {
+  color: #fff; text-decoration: none; font-size: 13px;
+  padding: 7px 12px; border: 1px solid rgba(255,255,255,.35); border-radius: 999px;
+  background: transparent;
+}
+.kopf-link:hover { background: rgba(255,255,255,.12); }
+
+.inhalt { max-width: 1200px; margin: 0 auto; padding: 16px; }
+.fuss { text-align: center; color: var(--farbe-text-leise); font-size: 12px; padding: 24px 16px 32px; }
+
+/* ---------- Filter-Chips ---------- */
+.filterleiste { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 13px; border-radius: 999px;
+  border: 1px solid var(--farbe-rand); background: var(--farbe-karte);
+  font-size: 14px; font-weight: 500;
+}
+.chip[aria-pressed="true"] { background: var(--farbe-akzent); border-color: var(--farbe-akzent); color: var(--farbe-akzent-text); font-weight: 600; }
+.chip-leeren { border-style: dashed; color: var(--farbe-text-leise); }
+
+/* ---------- Karte + Liste ---------- */
+.karten-layout { display: grid; gap: 16px; }
+#karte {
+  height: 46vh; min-height: 300px; border-radius: var(--radius);
+  box-shadow: var(--schatten); z-index: 1;
+}
+.automaten-liste { display: grid; gap: 10px; align-content: start; }
+.liste-titel { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--farbe-text-leise); margin: 0 0 2px; }
+@media (min-width: 900px) {
+  .karten-layout { grid-template-columns: 1.5fr 1fr; }
+  #karte { height: calc(100vh - 150px); }
+  .automaten-liste { max-height: calc(100vh - 150px); overflow-y: auto; padding-right: 4px; }
+}
+
+.box {
+  background: var(--farbe-karte); border-radius: var(--radius);
+  box-shadow: var(--schatten); border: 1px solid var(--farbe-rand);
+}
+.automat-karte {
+  display: flex; gap: 12px; align-items: center; width: 100%; text-align: left;
+  padding: 12px 14px; color: inherit;
+}
+.automat-karte:hover { border-color: var(--farbe-primaer); }
+.automat-karte.gedimmt { opacity: .55; }
+.typ-icon {
+  flex: 0 0 auto; width: 44px; height: 44px; border-radius: 12px;
+  display: grid; place-items: center; font-size: 22px; background: var(--farbe-primaer-hell);
+}
+.automat-karte .titel { font-weight: 650; }
+.automat-karte .info { font-size: 13px; color: var(--farbe-text-leise); }
+.automat-karte .pfeil { margin-left: auto; color: var(--farbe-text-leise); font-size: 20px; }
+
+.ampel { display: flex; gap: 10px; font-size: 12.5px; margin-top: 4px; flex-wrap: wrap; }
+.ampel span { display: inline-flex; align-items: center; gap: 4px; }
+.punkt { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.punkt.ok { background: var(--farbe-ok); } .punkt.fast { background: var(--farbe-fast); } .punkt.leer { background: var(--farbe-leer); }
+
+/* Pins auf der Karte */
+.pin-huelle { background: none; border: none; }
+.pin {
+  position: relative; width: 44px; height: 44px; border-radius: 50% 50% 50% 4px;
+  transform: rotate(-45deg); background: var(--farbe-primaer);
+  border: 3px solid #fff; box-shadow: 0 3px 8px rgba(0,0,0,.3);
+  display: grid; place-items: center;
+}
+.pin > span { transform: rotate(45deg); font-size: 19px; }
+.pin > b {
+  position: absolute; top: -8px; right: -8px; transform: rotate(45deg);
+  min-width: 22px; height: 22px; padding: 0 5px; border-radius: 11px;
+  background: var(--farbe-akzent); color: var(--farbe-akzent-text);
+  font-size: 12px; display: grid; place-items: center; border: 2px solid #fff;
+}
+.pin.gedimmt { background: #9aa5a0; }
+.pin.gedimmt > b { background: #fff; color: #666; border-color: #ccc; }
+
+/* ---------- Automaten-Ansicht ---------- */
+.zurueck {
+  background: none; border: none; padding: 6px 0; margin-bottom: 8px;
+  color: var(--farbe-primaer); font-weight: 600;
+}
+.automat-kopf { padding: 16px; display: flex; gap: 14px; align-items: flex-start; margin-bottom: 14px; flex-wrap: wrap; }
+.automat-kopf .typ-icon { width: 56px; height: 56px; font-size: 28px; }
+.automat-kopf h1 { font-size: 22px; }
+.automat-kopf .info { color: var(--farbe-text-leise); font-size: 14px; }
+.automat-kopf .aktionen { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+
+.knopf {
+  display: inline-flex; align-items: center; gap: 6px; justify-content: center;
+  padding: 9px 16px; border-radius: 999px; border: none;
+  background: var(--farbe-primaer); color: #fff; font-weight: 600; text-decoration: none; font-size: 14px;
+}
+.knopf:hover { filter: brightness(1.12); }
+.knopf.leise { background: var(--farbe-primaer-hell); color: var(--farbe-primaer); }
+.knopf.klein { padding: 6px 12px; font-size: 13px; }
+.knopf:disabled { opacity: .5; cursor: default; }
+
+.kategorie-titel { font-size: 15px; margin: 18px 0 8px; color: var(--farbe-text-leise); font-weight: 600; }
+.produkt-raster { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+.produkt-karte {
+  position: relative; padding: 12px; text-align: left; color: inherit;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.produkt-karte:hover { border-color: var(--farbe-primaer); }
+.produkt-karte.leer { opacity: .55; }
+.produkt-bild {
+  width: 52px; height: 52px; border-radius: 12px; display: grid; place-items: center;
+  font-size: 28px; background: var(--farbe-primaer-hell);
+}
+.produkt-bild img { width: 100%; height: 100%; object-fit: contain; }
+.produkt-karte .name { font-weight: 600; font-size: 14px; line-height: 1.25; }
+.produkt-karte .portion { font-size: 12px; color: var(--farbe-text-leise); }
+.produkt-karte .unten { display: flex; justify-content: space-between; align-items: center; margin-top: auto; gap: 6px; }
+.preis { font-weight: 750; font-size: 16px; }
+
+.status { font-size: 11.5px; font-weight: 600; padding: 3px 8px; border-radius: 999px; white-space: nowrap; }
+.status.ok { background: color-mix(in srgb, var(--farbe-ok) 14%, transparent); color: var(--farbe-ok); }
+.status.fast { background: color-mix(in srgb, var(--farbe-fast) 16%, transparent); color: #9a6b00; }
+.status.leer { background: color-mix(in srgb, var(--farbe-leer) 14%, transparent); color: var(--farbe-leer); }
+
+.labels { display: flex; flex-wrap: wrap; gap: 4px; }
+.label { font-size: 10.5px; font-weight: 600; padding: 2px 7px; border-radius: 6px; color: #fff; }
+.label.protein { background: var(--label-protein); }
+.label.zuckerfrei { background: var(--label-zuckerfrei); }
+.label.vegan { background: var(--label-vegan); }
+.label.gekuehlt { background: var(--label-gekuehlt); }
+
+.leer-hinweis { padding: 24px; text-align: center; color: var(--farbe-text-leise); }
+
+/* ---------- Wünsche ---------- */
+.wuensche { margin-top: 24px; padding: 16px; }
+.wuensche h2 { font-size: 18px; }
+.wuensche .unterzeile { color: var(--farbe-text-leise); font-size: 13.5px; margin: 4px 0 12px; }
+.wunsch-form { display: flex; gap: 8px; margin-bottom: 12px; }
+.eingabe {
+  flex: 1; min-width: 0; padding: 9px 14px; border-radius: 999px;
+  border: 1px solid var(--farbe-rand); background: var(--farbe-hintergrund);
+}
+.eingabe:focus { outline: 2px solid var(--farbe-akzent); border-color: transparent; }
+.wunsch-liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.wunsch { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius-klein); background: var(--farbe-hintergrund); }
+.wunsch .text { flex: 1; }
+.like {
+  display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px; border-radius: 999px;
+  border: 1px solid var(--farbe-rand); background: var(--farbe-karte); font-size: 13px; font-weight: 600;
+}
+.like[aria-pressed="true"] { background: var(--farbe-primaer); color: #fff; border-color: var(--farbe-primaer); }
+
+/* ---------- Produkt-Details (Dialog) ---------- */
+dialog.detail {
+  border: none; padding: 0; border-radius: 20px; width: min(520px, calc(100vw - 24px));
+  max-height: calc(100vh - 40px); box-shadow: 0 20px 60px rgba(0,0,0,.3);
+  background: var(--farbe-karte); color: var(--farbe-text);
+}
+dialog.detail::backdrop { background: rgba(10, 20, 15, .45); }
+.detail-inhalt { padding: 20px; }
+.detail-kopf { display: flex; gap: 14px; align-items: center; margin-bottom: 12px; padding-right: 36px; }
+.detail-kopf .produkt-bild { width: 72px; height: 72px; font-size: 40px; flex: 0 0 auto; }
+.detail-kopf h2 { font-size: 20px; }
+.schliessen {
+  position: absolute; top: 12px; right: 12px; width: 34px; height: 34px; border-radius: 50%;
+  border: none; background: var(--farbe-hintergrund); font-size: 18px;
+}
+.detail h3 { font-size: 14px; margin: 18px 0 8px; color: var(--farbe-text-leise); text-transform: uppercase; letter-spacing: .05em; }
+.tabelle { width: 100%; border-collapse: collapse; font-size: 14px; }
+.tabelle th, .tabelle td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--farbe-rand); }
+.tabelle th { font-weight: 600; color: var(--farbe-text-leise); font-size: 12.5px; }
+.tabelle td.zahl, .tabelle th.zahl { text-align: right; font-variant-numeric: tabular-nums; }
+.tabelle tr.hervor td { font-weight: 700; }
+.quelle { font-size: 12px; color: var(--farbe-text-leise); margin-top: 8px; }
+.quelle.ungeprueft::before { content: "⚠ "; }
+.verfuegbar-liste { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+.verfuegbar-liste a { display: flex; justify-content: space-between; align-items: center; gap: 8px; text-decoration: none; color: inherit; padding: 8px 10px; border-radius: var(--radius-klein); background: var(--farbe-hintergrund); }
+
+/* ---------- Leaflet-Anpassungen ---------- */
+.leaflet-container { font-family: var(--schrift); }
+.leaflet-tooltip { font-weight: 600; }
