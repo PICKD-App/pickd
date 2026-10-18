@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PICKD – Betreiber</title>
+  <meta name="theme-color" content="#172b24">
+  <link rel="icon" href="assets/pickd-zeichen.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/betreiber.css">
+</head>
+<body>
+  <header class="kopf">
+    <a class="marke" href="index.html">
+      <img data-logo alt="">
+      <span><span class="marke-name" data-firmenname>PICKD</span><span class="marke-slogan">Betreiber-Bereich</span></span>
+    </a>
+    <div style="display:flex;gap:8px">
+      <a class="kopf-link" href="index.html">Kunden-Ansicht</a>
+      <button class="kopf-link versteckt" id="abmelden">Abmelden</button>
+    </div>
+  </header>
+
+  <!-- Login -->
+  <main class="inhalt" id="login-ansicht">
+    <form class="box login" id="login-form">
+      <img data-logo alt="" class="login-logo">
+      <h1>Betreiber-Login</h1>
+      <p class="leise">Verwaltung der PICKD-Automaten</p>
+      <label for="passwort">Passwort</label>
+      <input class="eingabe" type="password" id="passwort" autocomplete="current-password" required>
+      <p class="fehler versteckt" id="login-fehler">Falsches Passwort.</p>
+      <button class="knopf" type="submit">Anmelden</button>
+      <p class="leise klein">Demo-Login – das Passwort steht in <code>js/config.js</code>.</p>
+    </form>
+  </main>
+
+  <!-- Betreiber-Bereich -->
+  <main class="inhalt versteckt" id="app-ansicht">
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-tab="uebersicht">📊 Übersicht</button>
+      <button role="tab" data-tab="bestand">📦 Bestand</button>
+      <button role="tab" data-tab="statistik">📈 Statistik</button>
+      <button role="tab" data-tab="sortiment">🛒 Sortiment</button>
+    </nav>
+    <section id="tab-inhalt"></section>
+  </main>
+
+  <div class="toast versteckt" id="toast" role="status"></div>
+
+  <footer class="fuss">Demo-Version · Bestand und Verkäufe sind simuliert</footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/gemeinsam.js"></script>
+  <script src="js/betreiber.js"></script>
+</body>
+</html>

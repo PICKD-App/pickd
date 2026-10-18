@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PICKD – Gesunde Snackautomaten</title>
+  <meta name="theme-color" content="#172b24">
+  <link rel="icon" href="assets/pickd-zeichen.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="kopf">
+    <a class="marke" href="#/">
+      <img data-logo alt="">
+      <span><span class="marke-name" data-firmenname>PICKD</span><span class="marke-slogan" data-slogan></span></span>
+    </a>
+    <a class="kopf-link" href="betreiber.html">Betreiber</a>
+  </header>
+
+  <main class="inhalt">
+    <!-- Ansicht 1: Karte mit allen Automaten -->
+    <section id="ansicht-karte">
+      <div class="filterleiste" data-filterleiste></div>
+      <div class="karten-layout">
+        <div id="karte" aria-label="Karte mit allen PICKD-Automaten"></div>
+        <div class="automaten-liste">
+          <p class="liste-titel" id="liste-titel">Alle Automaten</p>
+          <div id="automaten-liste" style="display:grid;gap:10px"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ansicht 2: ein einzelner Automat -->
+    <section id="ansicht-automat" class="versteckt">
+      <button class="zurueck" onclick="location.hash = '#/'">← Zur Karte</button>
+      <div id="automat-kopf"></div>
+      <div class="filterleiste" data-filterleiste></div>
+      <div id="automat-produkte"></div>
+      <div id="automat-wuensche"></div>
+    </section>
+  </main>
+
+  <!-- Produkt-Details -->
+  <dialog class="detail" id="produkt-dialog">
+    <button class="schliessen" aria-label="Schließen" onclick="this.closest('dialog').close()">✕</button>
+    <div class="detail-inhalt" id="produkt-detail"></div>
+  </dialog>
+
+  <footer class="fuss">Demo-Version · Bestand und Verkäufe sind simuliert · Kartendaten © OpenStreetMap</footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/gemeinsam.js"></script>
+  <script src="js/kunde.js"></script>
+</body>
+</html>
