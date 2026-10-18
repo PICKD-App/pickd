@@ -4,12 +4,12 @@
    ändern kann. Nach dem Speichern einfach die Seite neu laden.
    ========================================================= */
 window.PICKD_CONFIG = {
-  // Name & Logo (Logo-Datei liegt im Ordner "assets")
+  // Name & Logo
   firmenname: 'PICKD',
   slogan: 'pick what fits.',
   // Markenzeichen (nachgebaut nach Lucas Logo-Board). Originaldatei einfach
-  // in den Ordner "assets" legen und hier den Dateinamen eintragen.
-  logo: 'assets/pickd-zeichen.svg',
+  // neben die anderen Dateien legen und hier den Dateinamen eintragen.
+  logo: 'pickd-zeichen.svg',
   // Schriftzug "PICKD." neben dem Zeichen anzeigen (false, wenn das Logo ihn schon enthält)
   nameNebenLogo: true,
 

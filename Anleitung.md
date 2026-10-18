@@ -8,30 +8,30 @@ Gehört zu [[PICKD App]]. Kunden-Seite: `index.html` · Betreiber-Bereich: `betr
 
 ## Öffnen
 - `index.html` per Doppelklick im Browser öffnen (Internet nötig für Karte & Schrift).
-- Betreiber-Bereich: oben rechts auf „Betreiber“. Das Demo-Passwort steht in `js/config.js`.
+- Betreiber-Bereich: oben rechts auf „Betreiber“. Das Demo-Passwort steht in `config.js`.
 - Bestand, Verkäufe und Wünsche werden **simuliert** und im Browser gespeichert. Mit „↺ Demo zurücksetzen“ (Betreiber → Sortiment) geht alles auf Anfang.
 
 ## Was ändere ich wo?
 
 | Ich will … | Datei | Was genau |
 |---|---|---|
-| Farben / Schrift ändern | `css/theme.css` | Farbwerte bei `--farbe-…`, Schrift bei `--schrift` |
-| Logo tauschen | `assets/` + `js/config.js` | Datei in `assets` legen, bei `logo:` den Dateinamen eintragen |
-| Name / Slogan ändern | `js/config.js` | `firmenname`, `slogan` |
-| „Fast leer“-Grenze, Fachgröße, Passwort | `js/config.js` | `fastLeerGrenze`, `kapazitaetProFach`, `demoPasswort` |
-| Produkt hinzufügen / Preis / Nährwerte | `js/data.js` | Block in `PICKD_PRODUKTE` kopieren und anpassen |
-| Produktfoto statt Emoji | `js/data.js` | beim Produkt `bild: 'assets/fotos/name.png'` ergänzen |
-| Automat / Standort hinzufügen | `js/data.js` | Block in `PICKD_AUTOMATEN` kopieren, Koordinaten von openstreetmap.org |
-| Sortiment eines Automaten | `js/data.js` | Liste `sortiment: [...]` (oder live im Betreiber-Bereich) |
+| Farben / Schrift ändern | `theme.css` | Farbwerte bei `--farbe-…`, Schrift bei `--schrift` |
+| Logo tauschen | `config.js` | Datei neben die anderen Dateien legen, bei `logo:` den Dateinamen eintragen |
+| Name / Slogan ändern | `config.js` | `firmenname`, `slogan` |
+| „Fast leer“-Grenze, Fachgröße, Passwort | `config.js` | `fastLeerGrenze`, `kapazitaetProFach`, `demoPasswort` |
+| Produkt hinzufügen / Preis / Nährwerte | `data.js` | Block in `PICKD_PRODUKTE` kopieren und anpassen |
+| Produktfoto statt Emoji | `data.js` | beim Produkt `bild: 'name.png'` ergänzen |
+| Automat / Standort hinzufügen | `data.js` | Block in `PICKD_AUTOMATEN` kopieren, Koordinaten von openstreetmap.org |
+| Sortiment eines Automaten | `data.js` | Liste `sortiment: [...]` (oder live im Betreiber-Bereich) |
 
 Nach jeder Änderung die Seite im Browser neu laden.
 
 ## Aufbau (für später / echte App)
-- `js/store.js` – Datenspeicher & Simulation. Wenn es echte Automaten gibt, wird **nur diese Datei** gegen eine echte Datenbank/Schnittstelle getauscht.
-- `js/kunde.js` – Kunden-Seite (Karte, Automat, Filter, Produktdetails, Wünsche)
-- `js/betreiber.js` – Betreiber-Bereich (Übersicht, Bestand, Statistik, Sortiment)
-- `js/gemeinsam.js` – gemeinsame Bausteine
-- `css/style.css`, `css/betreiber.css` – Layout
+- `store.js` – Datenspeicher & Simulation. Wenn es echte Automaten gibt, wird **nur diese Datei** gegen eine echte Datenbank/Schnittstelle getauscht.
+- `kunde.js` – Kunden-Seite (Karte, Automat, Filter, Produktdetails, Wünsche)
+- `betreiber.js` – Betreiber-Bereich (Übersicht, Bestand, Statistik, Sortiment)
+- `gemeinsam.js` – gemeinsame Bausteine
+- `style.css`, `betreiber.css` – Layout
 
 ## Offene Punkte
 - Logo-Zeichen ist **nachgebaut** – Lucas Originaldatei (SVG oder PNG mit transparentem Hintergrund) einsetzen.
