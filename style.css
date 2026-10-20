@@ -50,6 +50,10 @@ a { color: var(--farbe-primaer); }
 .chip[aria-pressed="true"] { background: var(--farbe-akzent); border-color: var(--farbe-akzent); color: var(--farbe-akzent-text); font-weight: 600; }
 .chip-leeren { border-style: dashed; color: var(--farbe-text-leise); }
 
+/* ---------- Suche ---------- */
+.suche { margin-bottom: 12px; display: flex; }
+.suche .eingabe { padding: 11px 16px; font-size: 15px; background: var(--farbe-karte); }
+
 /* ---------- Karte + Liste ---------- */
 .karten-layout { display: grid; gap: 16px; }
 #karte {
@@ -58,6 +62,14 @@ a { color: var(--farbe-primaer); }
 }
 .automaten-liste { display: grid; gap: 10px; align-content: start; }
 .liste-titel { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--farbe-text-leise); margin: 0 0 2px; }
+.liste-kopf { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.standort-hinweis { font-size: 13px; color: var(--farbe-text-leise); margin: 0; }
+.entfernung { font-weight: 600; color: var(--farbe-primaer); }
+.automat-karte.naechster { border-color: var(--farbe-akzent); box-shadow: 0 0 0 2px var(--farbe-akzent), var(--schatten); }
+.ich-punkt {
+  width: 18px; height: 18px; border-radius: 50%; background: #2a7de1;
+  border: 3px solid #fff; box-shadow: 0 0 0 6px rgba(42,125,225,.25), 0 2px 6px rgba(0,0,0,.3);
+}
 @media (min-width: 900px) {
   .karten-layout { grid-template-columns: 1.5fr 1fr; }
   #karte { height: calc(100vh - 150px); }
@@ -134,6 +146,7 @@ a { color: var(--farbe-primaer); }
 }
 .produkt-karte:hover { border-color: var(--farbe-primaer); }
 .produkt-karte.leer { opacity: .55; }
+.produkt-karte .favorit-stern { position: absolute; top: 10px; right: 12px; font-size: 16px; }
 .produkt-bild {
   width: 52px; height: 52px; border-radius: 12px; display: grid; place-items: center;
   font-size: 28px; background: var(--farbe-primaer-hell);
@@ -188,6 +201,8 @@ dialog.detail::backdrop { background: rgba(10, 20, 15, .45); }
 .detail-kopf { display: flex; gap: 14px; align-items: center; margin-bottom: 12px; padding-right: 36px; }
 .detail-kopf .produkt-bild { width: 72px; height: 72px; font-size: 40px; flex: 0 0 auto; }
 .detail-kopf h2 { font-size: 20px; }
+.favorit-knopf { margin-top: 8px; }
+.favorit-knopf[aria-pressed="true"] { background: var(--farbe-akzent); color: var(--farbe-akzent-text); }
 .schliessen {
   position: absolute; top: 12px; right: 12px; width: 34px; height: 34px; border-radius: 50%;
   border: none; background: var(--farbe-hintergrund); font-size: 18px;

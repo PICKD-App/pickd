@@ -133,7 +133,8 @@
       bestand: simuliereBestand(sortimente),
       verkaeufe: simuliereVerkaeufe(sortimente),
       wuensche: startWuensche(),
-      meineLikes: []
+      meineLikes: [],
+      favoriten: []                     // Produkt-IDs, die die Kundin/der Kunde markiert hat
     };
   }
 
@@ -144,11 +145,12 @@
       const roh = localStorage.getItem(SPEICHER_KEY);
       if (roh) {
         const d = JSON.parse(roh);
-        if (d.signatur === datenSignatur()) { daten = d; return; }
+        if (d.signatur === datenSignatur()) { daten = d; daten.favoriten = d.favoriten || []; return; }
         // Daten geändert: neu simulieren, aber Wünsche behalten
         daten = neueDaten();
         daten.wuensche = d.wuensche || daten.wuensche;
         daten.meineLikes = d.meineLikes || [];
+        daten.favoriten = d.favoriten || [];
         speichern();
         return;
       }
@@ -241,6 +243,15 @@
       speichern();
     },
 
+    /* Favoriten (nur in diesem Browser gespeichert) */
+    istFavorit(produktId) { return daten.favoriten.includes(produktId); },
+    favoritUmschalten(produktId) {
+      const i = daten.favoriten.indexOf(produktId);
+      if (i >= 0) daten.favoriten.splice(i, 1);
+      else daten.favoriten.push(produktId);
+      speichern();
+    },
+
     /* Verkäufe: Liste von [zeitstempel, automatId, produktId] */
     verkaeufe(vonZeit, bisZeit, automatId) {
       return daten.verkaeufe.filter(v => v[0] >= vonZeit && (bisZeit == null || v[0] < bisZeit) && (!automatId || v[1] === automatId));
@@ -282,7 +293,9 @@
       speichern();
     },
     zuruecksetzen() {
+      const favoriten = daten.favoriten;
       daten = neueDaten();
+      daten.favoriten = favoriten;
       speichern();
     },
 

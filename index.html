@@ -23,13 +23,22 @@
   </header>
 
   <main class="inhalt">
+    <!-- Produktsuche (gilt für Karte und Automaten-Ansicht) -->
+    <div class="suche">
+      <input class="eingabe" type="search" id="suche" placeholder="🔍 Produkt suchen, z.B. Skyr oder Red Bull" aria-label="Produkt suchen" autocomplete="off">
+    </div>
+
     <!-- Ansicht 1: Karte mit allen Automaten -->
     <section id="ansicht-karte">
       <div class="filterleiste" data-filterleiste></div>
       <div class="karten-layout">
         <div id="karte" aria-label="Karte mit allen PICKD-Automaten"></div>
         <div class="automaten-liste">
-          <p class="liste-titel" id="liste-titel">Alle Automaten</p>
+          <div class="liste-kopf">
+            <p class="liste-titel" id="liste-titel">Alle Automaten</p>
+            <button class="knopf leise klein" id="standort-knopf" type="button">📍 Nächster Automat</button>
+          </div>
+          <p class="standort-hinweis versteckt" id="standort-hinweis" role="status"></p>
           <div id="automaten-liste" style="display:grid;gap:10px"></div>
         </div>
       </div>

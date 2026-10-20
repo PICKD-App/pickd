@@ -1,6 +1,7 @@
 /* =========================================================
    PICKD – Kunden-Seite
-   Karte · Automaten-Ansicht · Filter · Produktdetails · Wünsche
+   Karte · Automaten-Ansicht · Filter · Suche · Favoriten ·
+   nächster Automat (GPS) · Produktdetails · Wünsche
    ========================================================= */
 (function () {
   const S = window.PICKD;
@@ -8,6 +9,8 @@
   const KATEGORIE_TITEL = { Riegel: 'Riegel', Snack: 'Snacks', Gekühlt: 'Gekühlt', Getränk: 'Getränke' };
 
   let aktiveFilter = [];
+  let suche = '';
+  let standort = null; // [breite, länge], wenn die Kundin/der Kunde den Standort freigibt
   let aktuellerAutomat = null;
   let karte = null;
   const marker = {};
@@ -20,15 +23,32 @@
     S.sortiment(automatId).forEach(id => {
       const n = S.bestand(automatId, id);
       z[S.status(n)]++;
-      if (n > 0 && S.passtZuFiltern(S.produkt(id), aktiveFilter)) z.passend++;
+      if (n > 0 && passt(S.produkt(id))) z.passend++;
     });
     return z;
   }
 
+  /* ---------- Passt ein Produkt zu Filtern, Favoriten und Suche? ---------- */
+  function normalisieren(text) {
+    return text.toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
+  }
+  function sucheTrifft(p) {
+    if (!suche) return true;
+    const text = normalisieren(p.name + ' ' + p.kategorie + ' ' + KATEGORIE_TITEL[p.kategorie]);
+    return normalisieren(suche).split(/\s+/).filter(Boolean).every(wort => text.includes(wort));
+  }
+  function passt(p) {
+    const labelFilter = aktiveFilter.filter(f => f !== 'favorit');
+    return S.passtZuFiltern(p, labelFilter) &&
+      (!aktiveFilter.includes('favorit') || S.istFavorit(p.id)) &&
+      sucheTrifft(p);
+  }
+  function filterAktiv() { return aktiveFilter.length > 0 || suche !== ''; }
+
   /* ---------- Filter ---------- */
   function filterZeichnen() {
     document.querySelectorAll('[data-filterleiste]').forEach(leiste => {
-      leiste.innerHTML = S.FILTER.map(f =>
+      leiste.innerHTML = S.FILTER.concat({ key: 'favorit', text: 'Favoriten', emoji: '⭐' }).map(f =>
         `<button class="chip" data-filter="${f.key}" aria-pressed="${aktiveFilter.includes(f.key)}">${f.emoji} ${f.text}</button>`
       ).join('') + (aktiveFilter.length ? '<button class="chip chip-leeren" data-filter-leeren>Filter löschen</button>' : '');
     });
@@ -41,6 +61,13 @@
       allesNeuZeichnen();
     }
     if (e.target.closest('[data-filter-leeren]')) { aktiveFilter = []; allesNeuZeichnen(); }
+  });
+
+  /* ---------- Suche ---------- */
+  const suchfeld = document.getElementById('suche');
+  suchfeld.addEventListener('input', () => {
+    suche = suchfeld.value.trim();
+    allesNeuZeichnen();
   });
 
   /* ---------- Karte ---------- */
@@ -80,8 +107,8 @@
 
   function pinIcon(a) {
     const z = zaehle(a.id);
-    const zahl = aktiveFilter.length ? z.passend : z.ok + z.fast;
-    const gedimmt = aktiveFilter.length && !z.passend;
+    const zahl = filterAktiv() ? z.passend : z.ok + z.fast;
+    const gedimmt = filterAktiv() && !z.passend;
     return L.divIcon({
       className: 'pin-huelle',
       html: `<div class="pin ${gedimmt ? 'gedimmt' : ''}"><span>${S.typen[a.typ].emoji}</span><b>${zahl}</b></div>`,
@@ -96,26 +123,84 @@
 
   /* ---------- Liste neben der Karte ---------- */
   function listeZeichnen() {
-    const automaten = S.alleAutomaten().map(a => ({ a, z: zaehle(a.id) }));
-    if (aktiveFilter.length) automaten.sort((x, y) => y.z.passend - x.z.passend);
-    document.getElementById('liste-titel').textContent = aktiveFilter.length
+    const aktiv = filterAktiv();
+    const automaten = S.alleAutomaten().map(a => ({ a, z: zaehle(a.id), km: standort ? entfernungKm(standort, a.koordinaten) : null }));
+    // Mit Standort: nach Entfernung sortieren (passende zuerst), sonst nach Anzahl passender Produkte
+    if (standort) automaten.sort((x, y) => (aktiv ? (y.z.passend > 0) - (x.z.passend > 0) : 0) || x.km - y.km);
+    else if (aktiv) automaten.sort((x, y) => y.z.passend - x.z.passend);
+    const naechster = standort && automaten.find(x => !aktiv || x.z.passend);
+    document.getElementById('liste-titel').textContent = aktiv
       ? 'Automaten mit passenden Produkten' : 'Alle Automaten (' + automaten.length + ')';
 
-    const keinTreffer = aktiveFilter.length && automaten.every(x => !x.z.passend);
+    const keinTreffer = aktiv && automaten.every(x => !x.z.passend);
+    const keinTrefferText = suche
+      ? `Gerade hat kein Automat „${S.esc(suche)}“${aktiveFilter.length ? ' passend zu deinen Filtern' : ''} vorrätig.`
+      : 'Gerade gibt es kein Produkt, das zu <strong>allen</strong> gewählten Filtern passt. Probier weniger Filter.';
     document.getElementById('automaten-liste').innerHTML = (keinTreffer
-      ? '<div class="box leer-hinweis">Gerade gibt es kein Produkt, das zu <strong>allen</strong> gewählten Filtern passt. Probier weniger Filter.</div>' : '') +
-      automaten.map(({ a, z }) => {
+      ? `<div class="box leer-hinweis">${keinTrefferText}</div>` : '') +
+      automaten.map(({ a, z, km }) => {
       const typ = S.typen[a.typ];
-      const gedimmt = aktiveFilter.length && !z.passend;
-      const zeile = aktiveFilter.length
+      const gedimmt = aktiv && !z.passend;
+      const istNaechster = naechster && naechster.a.id === a.id;
+      const entfernung = km != null ? `<span class="entfernung">${istNaechster ? 'Am nächsten · ' : ''}${entfernungText(km)}</span> · ` : '';
+      const zeile = aktiv
         ? `<div class="ampel"><span><i class="punkt ${z.passend ? 'ok' : 'leer'}"></i>${z.passend} passende${z.passend === 1 ? 's' : ''} Produkt${z.passend === 1 ? '' : 'e'} verfügbar</span></div>`
         : `<div class="ampel"><span><i class="punkt ok"></i>${z.ok} verfügbar</span>${z.fast ? `<span><i class="punkt fast"></i>${z.fast} fast leer</span>` : ''}${z.leer ? `<span><i class="punkt leer"></i>${z.leer} aus</span>` : ''}</div>`;
-      return `<a class="box automat-karte ${gedimmt ? 'gedimmt' : ''}" href="#/automat/${a.id}" style="text-decoration:none">
+      return `<a class="box automat-karte ${gedimmt ? 'gedimmt' : ''} ${istNaechster ? 'naechster' : ''}" href="#/automat/${a.id}" style="text-decoration:none">
         <div class="typ-icon">${typ.emoji}</div>
-        <div><div class="titel">${S.esc(a.name)}</div><div class="info">${typ.name} · ${S.esc(a.adresse)}</div>${zeile}</div>
+        <div><div class="titel">${S.esc(a.name)}</div><div class="info">${entfernung}${typ.name} · ${S.esc(a.adresse)}</div>${zeile}</div>
         <span class="pfeil">›</span></a>`;
     }).join('');
   }
+
+  /* ---------- Nächster Automat (Standort per GPS) ---------- */
+  function entfernungKm(von, nach) {
+    const rad = x => x * Math.PI / 180;
+    const dLat = rad(nach[0] - von[0]), dLon = rad(nach[1] - von[1]);
+    const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(von[0])) * Math.cos(rad(nach[0])) * Math.sin(dLon / 2) ** 2;
+    return 6371 * 2 * Math.asin(Math.sqrt(h));
+  }
+  function entfernungText(km) {
+    return km < 1 ? Math.round(km * 1000 / 10) * 10 + ' m' : S.zahl(km, 1) + ' km';
+  }
+
+  let standortMarker = null;
+  const standortKnopf = document.getElementById('standort-knopf');
+  const standortHinweis = document.getElementById('standort-hinweis');
+  function hinweis(text) {
+    standortHinweis.textContent = text;
+    standortHinweis.classList.toggle('versteckt', !text);
+  }
+  standortKnopf.addEventListener('click', () => {
+    if (!navigator.geolocation) { hinweis('Dein Browser kann den Standort leider nicht bestimmen.'); return; }
+    standortKnopf.disabled = true;
+    hinweis('Standort wird bestimmt …');
+    navigator.geolocation.getCurrentPosition(pos => {
+      standortKnopf.disabled = false;
+      standort = [pos.coords.latitude, pos.coords.longitude];
+      hinweis('');
+      listeZeichnen();
+      if (karte) {
+        if (standortMarker) standortMarker.setLatLng(standort);
+        else standortMarker = L.marker(standort, {
+          icon: L.divIcon({ className: 'pin-huelle', html: '<div class="ich-punkt"></div>', iconSize: [18, 18], iconAnchor: [9, 9] }),
+          title: 'Dein Standort', zIndexOffset: 1000
+        }).addTo(karte).bindTooltip('Du bist hier');
+        // Ausschnitt: eigener Standort + nächster (passender) Automat
+        const aktiv = filterAktiv();
+        const ziel = S.alleAutomaten()
+          .filter(a => !aktiv || zaehle(a.id).passend)
+          .sort((x, y) => entfernungKm(standort, x.koordinaten) - entfernungKm(standort, y.koordinaten))[0];
+        if (ziel) karte.fitBounds([standort, ziel.koordinaten], { padding: [60, 60], maxZoom: 16 });
+        else karte.setView(standort, 14);
+      }
+    }, fehler => {
+      standortKnopf.disabled = false;
+      hinweis(fehler.code === 1
+        ? 'Standort nicht freigegeben. Erlaube den Zugriff im Browser, um den nächsten Automaten zu sehen.'
+        : 'Standort konnte nicht bestimmt werden. Bitte später nochmal versuchen.');
+    }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 });
+  });
 
   /* ---------- Automaten-Ansicht ---------- */
   function automatZeichnen() {
@@ -138,7 +223,7 @@
       </div>`;
 
     // Produkte nach Kategorie gruppieren, verfügbare zuerst
-    const produkte = S.sortiment(a.id).map(id => S.produkt(id)).filter(p => S.passtZuFiltern(p, aktiveFilter));
+    const produkte = S.sortiment(a.id).map(id => S.produkt(id)).filter(passt);
     let html = '';
     KATEGORIEN.forEach(kat => {
       const liste = produkte.filter(p => p.kategorie === kat)
@@ -148,6 +233,7 @@
         liste.map(p => {
           const n = S.bestand(a.id, p.id);
           return `<button class="box produkt-karte ${n ? '' : 'leer'}" data-produkt="${p.id}">
+            ${S.istFavorit(p.id) ? '<span class="favorit-stern" title="Favorit">⭐</span>' : ''}
             ${S.produktBild(p)}
             <div class="name">${S.esc(p.name)}</div>
             <div class="portion">${S.portionText(p)}</div>
@@ -157,7 +243,7 @@
         }).join('') + '</div>';
     });
     document.getElementById('automat-produkte').innerHTML = html ||
-      '<div class="box leer-hinweis">Kein Produkt in diesem Automaten passt zu deinen Filtern.</div>';
+      `<div class="box leer-hinweis">Kein Produkt in diesem Automaten passt zu ${suche ? 'deiner Suche' + (aktiveFilter.length ? ' und deinen Filtern' : '') : 'deinen Filtern'}.</div>`;
 
     wuenscheZeichnen(a);
   }
@@ -209,6 +295,7 @@
         ${S.produktBild(p)}
         <div><h2>${S.esc(p.name)}</h2>
           <div class="info" style="color:var(--farbe-text-leise)">${S.portionText(p)} · <strong style="color:var(--farbe-text)">${S.euro(p.preis)}</strong></div>
+          <button class="knopf leise klein favorit-knopf" data-favorit="${p.id}" aria-pressed="${S.istFavorit(id)}">${S.istFavorit(id) ? '⭐ Favorit' : '☆ Als Favorit merken'}</button>
           ${hier != null ? `<div style="margin-top:6px">${S.statusHtml(hier)} <span style="font-size:12.5px;color:var(--farbe-text-leise)">${hier ? 'noch ' + hier + ' Stück hier' : ''}</span></div>` : ''}
         </div>
       </div>
@@ -231,6 +318,11 @@
   document.addEventListener('click', e => {
     const karteBtn = e.target.closest('[data-produkt]');
     if (karteBtn) produktOeffnen(karteBtn.dataset.produkt);
+    const favoritBtn = e.target.closest('[data-favorit]');
+    if (favoritBtn) {
+      S.favoritUmschalten(favoritBtn.dataset.favorit); // löst pickd-update aus -> Seite wird neu gezeichnet
+      produktOeffnen(favoritBtn.dataset.favorit);
+    }
     if (e.target.closest('[data-dialog-schliessen]')) document.getElementById('produkt-dialog').close();
   });
   // Klick neben den Dialog schließt ihn

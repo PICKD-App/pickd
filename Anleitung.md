@@ -28,7 +28,7 @@ Nach jeder Änderung die Seite im Browser neu laden.
 
 ## Aufbau (für später / echte App)
 - `store.js` – Datenspeicher & Simulation. Wenn es echte Automaten gibt, wird **nur diese Datei** gegen eine echte Datenbank/Schnittstelle getauscht.
-- `kunde.js` – Kunden-Seite (Karte, Automat, Filter, Produktdetails, Wünsche)
+- `kunde.js` – Kunden-Seite (Karte, Automat, Filter, Suche, Favoriten, nächster Automat per GPS, Produktdetails, Wünsche)
 - `betreiber.js` – Betreiber-Bereich (Übersicht, Bestand, Statistik, Sortiment)
 - `gemeinsam.js` – gemeinsame Bausteine
 - `style.css`, `betreiber.css` – Layout
@@ -37,4 +37,7 @@ Nach jeder Änderung die Seite im Browser neu laden.
 - Logo-Zeichen ist **nachgebaut** – Lucas Originaldatei (SVG oder PNG mit transparentem Hintergrund) einsetzen.
 - Nährwerte mit ⚠ sind Richt-/Schätzwerte (`geprueft: false` in `data.js`): Trockenfrüchte-Mix, Rice Up, Soletti, Coca-Cola Zero, Red Bull, Risbellis, Skyr Heidelbeere, Sandwich.
 - „Red Bull Sugarfree Cherry“ aus der Produkttabelle als normales „Red Bull Sugarfree“ eingetragen.
-- Nebenfunktionen kommen später (Suche, Favoriten, nächster Automat per GPS, Angebote, Umfrage-Auswertung …).
+- ✅ Erledigt: Produktsuche, Favoriten (⭐ im Produkt-Detail, Filter „Favoriten“) und „📍 Nächster Automat“ per GPS.
+  - Der Standort funktioniert nur über `https://` (z.B. GitHub Pages) oder `localhost`, nicht beim Öffnen per Doppelklick.
+  - Favoriten werden nur im jeweiligen Browser gespeichert.
+- Nebenfunktionen kommen später (Angebote, Umfrage-Auswertung …).
