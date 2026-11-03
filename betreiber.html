@@ -27,7 +27,7 @@
       <span><span class="marke-name" data-firmenname>PICKD</span><span class="marke-slogan">Betreiber-Bereich</span></span>
     </a>
     <div style="display:flex;gap:8px">
-      <a class="kopf-link" href="index.html">Kunden-Ansicht</a>
+      <a class="kopf-link" href="index.html" aria-label="Kunden-Ansicht">Kunden<span class="nur-breit">-Ansicht</span></a>
       <button class="kopf-link versteckt" id="abmelden">Abmelden</button>
     </div>
   </header>
@@ -48,6 +48,7 @@
 
   <!-- Betreiber-Bereich -->
   <main class="inhalt versteckt" id="app-ansicht">
+    <h1 class="sr-only">Betreiber-Bereich</h1>
     <nav class="tabs" role="tablist">
       <button role="tab" data-tab="uebersicht">📊 Übersicht</button>
       <button role="tab" data-tab="bestand">📦 Bestand</button>
