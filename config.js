@@ -7,9 +7,11 @@ window.PICKD_CONFIG = {
   // Name & Logo
   firmenname: 'PICKD',
   slogan: 'pick what fits.',
-  // Markenzeichen (nachgebaut nach Lucas Logo-Board). Originaldatei einfach
-  // neben die anderen Dateien legen und hier den Dateinamen eintragen.
-  logo: 'pickd-zeichen.svg',
+  // Markenzeichen: offizielles "P" mit Blatt (limegrün, durchsichtiger Hintergrund)
+  // für dunkle Flächen wie die Kopfzeile
+  logo: 'pickd-zeichen.png',
+  // Dasselbe Zeichen auf dunkelgrünem Quadrat, für helle Flächen (z.B. Login)
+  logoAufHell: 'icons/icon-192.png?v=2',
   // Schriftzug "PICKD." neben dem Zeichen anzeigen (false, wenn das Logo ihn schon enthält)
   nameNebenLogo: true,
 

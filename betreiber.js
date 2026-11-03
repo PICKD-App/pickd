@@ -266,30 +266,41 @@
       <div class="box abschnitt">
         <div class="abschnitt-kopf"><h2>Sortiment & Preise</h2>
           <button class="knopf leise klein" id="zuruecksetzen">↺ Demo zurücksetzen</button></div>
-        <p class="leise klein" style="margin-top:-6px">Preis ändern = sofort auf der Kunden-Seite sichtbar. Häkchen = Produkt ist in diesem Automaten.
+        <p class="leise klein" style="margin-top:-6px">Preis ändern = sofort auf der Kunden-Seite sichtbar. Angebotspreis eintragen = Produkt wird als „Angebot“ markiert (Feld leeren beendet es). Häkchen = Produkt ist in diesem Automaten.
           Neu hinzugefügte Produkte sind zuerst leer und müssen nachgefüllt werden.</p>
         <div class="tabelle-huelle"><table class="tabelle">
-          <thead><tr><th>Produkt</th><th class="zahl">Einkauf netto</th><th class="zahl">Verkauf brutto</th><th class="zahl">Gewinn/Stk</th><th class="zahl">Marge</th>
+          <thead><tr><th>Produkt</th><th class="zahl">Einkauf netto</th><th class="zahl">Verkauf brutto</th><th class="zahl" title="Angebotspreis – leer lassen für kein Angebot">Angebot</th><th class="zahl">Gewinn/Stk</th><th class="zahl">Marge</th>
             ${automaten.map(a => `<th class="mitte" title="${S.esc(a.name)}">${S.typen[a.typ].emoji}<br><span class="klein">${S.esc(a.name.replace(' St. Pölten', ''))}</span></th>`).join('')}</tr></thead>
           <tbody>${S.alleProdukte().map(p => {
             const gewinn = S.gewinnProStueck(p);
             const marge = gewinn / (p.preis / (1 + p.ust));
-            const geaendert = Math.abs(p.preis - p.originalPreis) > 0.001;
+            const geaendert = Math.abs(p.normalPreis - p.originalPreis) > 0.001;
             return `<tr><td>${p.emoji} ${S.esc(p.name)}<br><span class="klein leise">${S.portionText(p)} · ${S.esc(p.lieferant)}</span></td>
               <td class="zahl">${S.euro(p.einkauf)}</td>
-              <td class="zahl"><input type="number" step="0.05" min="0.1" value="${p.preis.toFixed(2)}" data-preis="${p.id}" class="${geaendert ? 'geaendert' : ''}" aria-label="Preis ${S.esc(p.name)}"></td>
+              <td class="zahl"><input type="number" step="0.05" min="0.1" value="${p.normalPreis.toFixed(2)}" data-preis="${p.id}" class="${geaendert ? 'geaendert' : ''}" aria-label="Preis ${S.esc(p.name)}"></td>
+              <td class="zahl"><input type="number" step="0.05" min="0.1" value="${p.angebot ? p.preis.toFixed(2) : ''}" placeholder="–" data-angebot="${p.id}" class="${p.angebot ? 'geaendert' : ''}" aria-label="Angebotspreis ${S.esc(p.name)}"></td>
               <td class="zahl">${S.euro(gewinn)}</td>
               <td class="zahl">${Math.round(marge * 100)} %</td>
               ${automaten.map(a => `<td class="mitte"><input type="checkbox" data-sortiment="${a.id}|${p.id}" ${S.sortiment(a.id).includes(p.id) ? 'checked' : ''} aria-label="${S.esc(p.name)} in ${S.esc(a.name)}"></td>`).join('')}
             </tr>`;
           }).join('')}</tbody>
         </table></div>
-        <p class="leise klein">Gewinn = Verkaufspreis ohne USt minus Einkauf. Werte aus der Produkttabelle (Luis Till).</p>
+        <p class="leise klein">Gewinn = Verkaufspreis ohne USt minus Einkauf (bei Angeboten mit dem Angebotspreis). Preise ohne Pfand. Werte aus der Produkttabelle (Luis Till).</p>
       </div>`;
 
     ziel.querySelectorAll('[data-preis]').forEach(inp => inp.addEventListener('change', () => {
       const wert = parseFloat(inp.value.replace(',', '.'));
       if (wert > 0) { S.preisSetzen(inp.dataset.preis, wert); meldung('Preis gespeichert'); }
+    }));
+    ziel.querySelectorAll('[data-angebot]').forEach(inp => inp.addEventListener('change', () => {
+      const id = inp.dataset.angebot;
+      const wert = parseFloat(inp.value.replace(',', '.'));
+      if (!(wert > 0)) {
+        if (S.produkt(id).angebot) { S.angebotSetzen(id, null); meldung('Angebot beendet'); }
+        inp.value = ''; return;
+      }
+      if (wert >= S.produkt(id).normalPreis) { inp.value = ''; meldung('Das Angebot muss günstiger als der normale Preis sein'); return; }
+      S.angebotSetzen(id, wert); meldung('Angebot gespeichert – Kunden sehen es sofort');
     }));
     ziel.querySelectorAll('[data-sortiment]').forEach(cb => cb.addEventListener('change', () => {
       const [aId, pId] = cb.dataset.sortiment.split('|');

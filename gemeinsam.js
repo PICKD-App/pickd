@@ -12,6 +12,7 @@
   /* Logo, Name und Slogan aus config.js in die Kopfzeile setzen */
   S.kopfEinrichten = function () {
     document.querySelectorAll('[data-logo]').forEach(img => { img.src = S.config.logo; img.alt = S.config.firmenname + ' Logo'; });
+    document.querySelectorAll('[data-logo-hell]').forEach(img => { img.src = S.config.logoAufHell; img.alt = S.config.firmenname + ' Logo'; });
     // Schriftzug wie im Logo: letzter Buchstabe + Punkt in der Akzentfarbe ("PICKD.")
     const name = S.config.firmenname;
     document.querySelectorAll('[data-firmenname]').forEach(el => {
@@ -31,7 +32,17 @@
   };
 
   S.labelsHtml = function (p) {
-    return `<div class="labels">${S.labels(p).map(l => `<span class="label ${l.key}">${l.text}</span>`).join('')}</div>`;
+    const angebot = p.angebot ? '<span class="label angebot">Angebot</span>' : '';
+    return `<div class="labels">${angebot}${S.labels(p).map(l => `<span class="label ${l.key}">${l.text}</span>`).join('')}</div>`;
+  };
+
+  /* Preis mit Angebot (alter Preis durchgestrichen) und Pfand-Hinweis */
+  S.preisHtml = function (p) {
+    return `<span class="preis-block">` +
+      (p.angebot ? `<s class="preis-alt" aria-label="statt ${S.euro(p.normalPreis)}">${S.euro(p.normalPreis)}</s>` : '') +
+      `<span class="preis ${p.angebot ? 'angebot' : ''}">${S.euro(p.preis)}</span>` +
+      (p.pfand ? `<span class="pfand">+ ${S.euro(p.pfand)} Pfand</span>` : '') +
+      `</span>`;
   };
 
   S.statusHtml = function (anzahl) {
