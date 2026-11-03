@@ -2,6 +2,7 @@
 
 Dauerhafte Grundlage für jede Design- und Code-Arbeit an PICKD. Erst lesen, dann gestalten.
 Farben, Schrift und Formen stehen technisch in `theme.css`, Einstellungen in `config.js`.
+Wie das Design im Detail aussieht (Bausteine, Zustände, Barrierefreiheit): `DESIGN.md`.
 
 ## Was PICKD ist
 PICKD ist ein Schulprojekt der HAK St. Pölten (Klasse 3IK, Schuljahr 2026/27): eine geplante Firma

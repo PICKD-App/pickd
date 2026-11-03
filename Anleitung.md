@@ -39,6 +39,7 @@ Nach jeder Änderung die Seite im Browser neu laden.
 - `betreiber.js` – Betreiber-Bereich (Übersicht, Bestand, Statistik, Sortiment, Preise & Angebote)
 - `gemeinsam.js` – gemeinsame Bausteine
 - `style.css`, `betreiber.css` – Layout
+- `PRODUCT.md` – worum es geht, für wen, Marke und Ton · `DESIGN.md` – Design-Regeln (Farben, Schrift, Bausteine, Barrierefreiheit)
 
 ## Offene Punkte
 - Logo: Kopfzeile (`pickd-zeichen.png`), Login und App-Icons zeigen jetzt das **offizielle** PICKD-Zeichen, freigestellt aus Lucas Logo. Eine Vektordatei (SVG) von Luca wäre noch schärfer.

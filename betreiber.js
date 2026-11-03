@@ -99,7 +99,7 @@
       <div class="box abschnitt">
         <div class="abschnitt-kopf"><h2>Automaten</h2>
           <button class="knopf leise klein" id="simulieren" title="Für die Präsentation: ein zufälliger Kauf passiert">🎲 Verkauf simulieren</button></div>
-        <div class="tabelle-huelle"><table class="tabelle">
+        <div class="tabelle-huelle" tabindex="0" role="region" aria-label="Tabelle, seitlich scrollbar"><table class="tabelle">
           <thead><tr><th>Standort</th><th class="zahl">Verkäufe heute</th><th class="zahl">Umsatz heute</th><th>Füllstand</th><th>Warnungen</th></tr></thead>
           <tbody>${S.alleAutomaten().map(a => {
             const k = kennzahlen(S.verkaeufe(heuteStart(), null, a.id));
@@ -115,14 +115,14 @@
       <div class="box abschnitt">
         <div class="abschnitt-kopf"><h2>💡 Top-Produktwünsche der Kunden</h2></div>
         ${top.length ? `<div class="hbalken">${top.map(w => `
-          <div class="zeile"><span class="name" title="${S.esc(w.text)}">${S.esc(w.text)} <span class="leise klein">· ${S.esc(S.automat(w.automat).name)}</span></span>
+          <div class="zeile"><span class="name" title="${S.esc(w.text)}">${S.esc(w.text)} <span class="leise klein">· ${S.esc((S.automat(w.automat) || { name: 'unbekannt' }).name)}</span></span>
           <div class="spur"><i style="width:${w.likes / top[0].likes * 100}%"></i></div><span class="zahl">${w.likes} 👍</span></div>`).join('')}</div>`
           : '<p class="leise">Noch keine Wünsche.</p>'}
       </div>`;
 
     document.getElementById('simulieren').addEventListener('click', () => {
       const v = S.verkaufSimulieren();
-      if (v) meldung(`Verkauft: ${v.produkt.name} @ ${v.automat.name}`);
+      if (v) meldung(`Verkauft: ${v.produkt.name} in ${v.automat.name}`);
     });
   }
 
@@ -203,7 +203,7 @@
     ziel.innerHTML = `
       <div class="abschnitt-kopf" style="margin-bottom:12px">
         <h2 style="font-size:17px">Auswertung</h2>
-        <select class="auswahl" id="zeitraum">
+        <select class="auswahl" id="zeitraum" aria-label="Zeitraum">
           <option value="7" ${statistikTage === 7 ? 'selected' : ''}>Letzte 7 Tage</option>
           <option value="14" ${statistikTage === 14 ? 'selected' : ''}>Letzte 14 Tage</option>
         </select>
@@ -268,7 +268,7 @@
           <button class="knopf leise klein" id="zuruecksetzen">↺ Demo zurücksetzen</button></div>
         <p class="leise klein" style="margin-top:-6px">Preis ändern = sofort auf der Kunden-Seite sichtbar. Angebotspreis eintragen = Produkt wird als „Angebot“ markiert (Feld leeren beendet es). Häkchen = Produkt ist in diesem Automaten.
           Neu hinzugefügte Produkte sind zuerst leer und müssen nachgefüllt werden.</p>
-        <div class="tabelle-huelle"><table class="tabelle">
+        <div class="tabelle-huelle" tabindex="0" role="region" aria-label="Tabelle, seitlich scrollbar"><table class="tabelle">
           <thead><tr><th>Produkt</th><th class="zahl">Einkauf netto</th><th class="zahl">Verkauf brutto</th><th class="zahl" title="Angebotspreis – leer lassen für kein Angebot">Angebot</th><th class="zahl">Gewinn/Stk</th><th class="zahl">Marge</th>
             ${automaten.map(a => `<th class="mitte" title="${S.esc(a.name)}">${S.typen[a.typ].emoji}<br><span class="klein">${S.esc(a.name.replace(' St. Pölten', ''))}</span></th>`).join('')}</tr></thead>
           <tbody>${S.alleProdukte().map(p => {
