@@ -130,6 +130,7 @@
       signatur: datenSignatur(),
       sortimente,
       preise: {},                       // geänderte Verkaufspreise { produktId: preis }
+      angebote: { 'more-bar': 1.90, 'skyr-natur': 1.50 }, // Angebotspreise { produktId: preis } (Demo)
       bestand: simuliereBestand(sortimente),
       verkaeufe: simuliereVerkaeufe(sortimente),
       wuensche: startWuensche(),
@@ -145,7 +146,7 @@
       const roh = localStorage.getItem(SPEICHER_KEY);
       if (roh) {
         const d = JSON.parse(roh);
-        if (d.signatur === datenSignatur()) { daten = d; daten.favoriten = d.favoriten || []; return; }
+        if (d.signatur === datenSignatur()) { daten = d; daten.favoriten = d.favoriten || []; daten.angebote = d.angebote || {}; return; }
         // Daten geändert: neu simulieren, aber Wünsche behalten
         daten = neueDaten();
         daten.wuensche = d.wuensche || daten.wuensche;
@@ -177,8 +178,10 @@
     produkt(id) {
       const p = PRODUKTE.find(x => x.id === id);
       if (!p) return null;
-      const preis = daten.preise[id] != null ? daten.preise[id] : p.preis;
-      return Object.assign({}, p, { preis, originalPreis: p.preis });
+      // normalPreis = Preis ohne Angebot (aus der Produkttabelle oder vom Betreiber geändert)
+      const normalPreis = daten.preise[id] != null ? daten.preise[id] : p.preis;
+      const angebot = daten.angebote[id] != null && daten.angebote[id] < normalPreis;
+      return Object.assign({}, p, { preis: angebot ? daten.angebote[id] : normalPreis, normalPreis, originalPreis: p.preis, angebot });
     },
     alleProdukte() { return PRODUKTE.map(p => Store.produkt(p.id)); },
     automat(id) { return AUTOMATEN.find(a => a.id === id) || null; },
@@ -283,6 +286,12 @@
       if (!p || !(preis > 0)) return;
       if (Math.abs(preis - p.preis) < 0.001) delete daten.preise[produktId];
       else daten.preise[produktId] = Math.round(preis * 100) / 100;
+      speichern();
+    },
+    /* Angebot: günstigerer Preis auf Zeit. null oder leer = Angebot beenden */
+    angebotSetzen(produktId, preis) {
+      if (preis == null || !(preis > 0)) delete daten.angebote[produktId];
+      else daten.angebote[produktId] = Math.round(preis * 100) / 100;
       speichern();
     },
     sortimentUmschalten(automatId, produktId) {

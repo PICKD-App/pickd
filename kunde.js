@@ -38,9 +38,10 @@
     return normalisieren(suche).split(/\s+/).filter(Boolean).every(wort => text.includes(wort));
   }
   function passt(p) {
-    const labelFilter = aktiveFilter.filter(f => f !== 'favorit');
+    const labelFilter = aktiveFilter.filter(f => f !== 'favorit' && f !== 'angebot');
     return S.passtZuFiltern(p, labelFilter) &&
       (!aktiveFilter.includes('favorit') || S.istFavorit(p.id)) &&
+      (!aktiveFilter.includes('angebot') || p.angebot) &&
       sucheTrifft(p);
   }
   function filterAktiv() { return aktiveFilter.length > 0 || suche !== ''; }
@@ -48,7 +49,7 @@
   /* ---------- Filter ---------- */
   function filterZeichnen() {
     document.querySelectorAll('[data-filterleiste]').forEach(leiste => {
-      leiste.innerHTML = S.FILTER.concat({ key: 'favorit', text: 'Favoriten', emoji: '⭐' }).map(f =>
+      leiste.innerHTML = S.FILTER.concat({ key: 'angebot', text: 'Angebote', emoji: '🏷️' }, { key: 'favorit', text: 'Favoriten', emoji: '⭐' }).map(f =>
         `<button class="chip" data-filter="${f.key}" aria-pressed="${aktiveFilter.includes(f.key)}">${f.emoji} ${f.text}</button>`
       ).join('') + (aktiveFilter.length ? '<button class="chip chip-leeren" data-filter-leeren>Filter löschen</button>' : '');
     });
@@ -238,7 +239,7 @@
             <div class="name">${S.esc(p.name)}</div>
             <div class="portion">${S.portionText(p)}</div>
             ${S.labelsHtml(p)}
-            <div class="unten"><span class="preis">${S.euro(p.preis)}</span>${S.statusHtml(n)}</div>
+            <div class="unten">${S.preisHtml(p)}${S.statusHtml(n)}</div>
           </button>`;
         }).join('') + '</div>';
     });
@@ -294,7 +295,7 @@
       <div class="detail-kopf">
         ${S.produktBild(p)}
         <div><h2>${S.esc(p.name)}</h2>
-          <div class="info" style="color:var(--farbe-text-leise)">${S.portionText(p)} · <strong style="color:var(--farbe-text)">${S.euro(p.preis)}</strong></div>
+          <div class="info" style="color:var(--farbe-text-leise)">${S.portionText(p)} · ${S.preisHtml(p)}</div>
           <button class="knopf leise klein favorit-knopf" data-favorit="${p.id}" aria-pressed="${S.istFavorit(id)}">${S.istFavorit(id) ? '⭐ Favorit' : '☆ Als Favorit merken'}</button>
           ${hier != null ? `<div style="margin-top:6px">${S.statusHtml(hier)} <span style="font-size:12.5px;color:var(--farbe-text-leise)">${hier ? 'noch ' + hier + ' Stück hier' : ''}</span></div>` : ''}
         </div>

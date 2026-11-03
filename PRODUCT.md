@@ -37,8 +37,10 @@ Produkt wirken, denn sie wird im Schulwettbewerb gezeigt.
 ## Marke (aus Lucas Logo-Board, verbindlich)
 - **Name:** PICKD, Schriftzug „PICKD.“ mit „D.“ in Lime
 - **Slogan:** „pick what fits.“ (klein geschrieben)
-- **Zeichen:** „P“ mit Blatt, limegrün auf Dark Green. Offizielle Version in `icons/` (App-Icons);
-  `pickd-zeichen.svg` in der Kopfzeile ist nur nachgebaut und soll durch Lucas Originaldatei ersetzt werden.
+- **Zeichen:** „P“ mit Blatt, limegrün mit leichtem Verlauf. Offiziell und überall eingesetzt:
+  `pickd-zeichen.png` (durchsichtig, nur auf dunklen Flächen wie der Kopfzeile) und `icons/` (auf dunkelgrünem
+  Quadrat, für helle Flächen, Homescreen und Favicon). Das limegrüne Zeichen nie direkt auf Weiß/Off White setzen.
+- **Wortmarke:** „PICKD.“ in Weiß (auf dunkel) mit „D.“ in Lime, darunter „pick what fits.“ gesperrt.
 - **Farben:** Dark Green `#172B24` (Hauptfarbe), Lime `#C6F46B` (Akzent), Off White `#F8F9F3`
   (Hintergrund), Grey `#6B6B6B` (Sekundär)
 - **Schrift:** Manrope, Bold für Titel, Regular für Text
@@ -66,7 +68,9 @@ Für das Design heißt das: PICKD soll **nicht** wie ein klassischer Verkaufsaut
 - **Labels** „High Protein“ und „Zuckerfrei“ werden berechnet, „Vegan“ und „Gekühlt“ kommen aus `data.js`.
 - **Verfügbarkeit** als Ampel: Verfügbar / Fast leer (weniger als 5 Stück) / Ausverkauft. Farbe nie allein, immer mit Text.
 - **Demo-Hinweis** im Fuß bleibt, solange die Daten simuliert sind.
-- **Preise** kommen aus der Produkttabelle (Luis Till) und sind dort **ohne Pfand (0,25 €)** angegeben. Die App zeigt den Pfand derzeit nirgends an.
+- **Preise** kommen aus der Produkttabelle (Luis Till) und sind **ohne Pfand**. Bei Getränken in Flasche oder Dose
+  steht „+ 0,25 € Pfand“ klein unter dem Preis (`pfand` in `data.js`).
+- **Angebote** zeigen den alten Preis durchgestrichen und das Label „Angebot“ (Lime). Ein Angebot ist immer günstiger als der normale Preis.
 
 ## Technische Grenzen
 - Reines HTML/CSS/JS, **kein Build-Schritt**, keine Frameworks. Karte: Leaflet + OpenStreetMap.
@@ -77,12 +81,11 @@ Für das Design heißt das: PICKD soll **nicht** wie ein klassischer Verkaufsaut
 - Plattform: **Web** (mobil zuerst, funktioniert auch am Desktop).
 
 ## Funktionsumfang
-Fertig: Karte mit allen Automaten, Automaten-Ansicht, Produkt-Detail mit Nährwerten, Filter (High Protein,
+Fertig: Angebote, Pfand-Hinweis, Karte mit allen Automaten, Automaten-Ansicht, Produkt-Detail mit Nährwerten, Filter (High Protein,
 Zuckerfrei, Vegan, Gekühlt), Produktwünsche mit Likes, Produktsuche, Favoriten, nächster Automat per GPS,
 Betreiber-Login (Demo-Passwort), Übersicht, Bestand/Nachfüll-Liste, Statistik, Sortiment & Preise.
 
-Später: Angebote, Umfrage-Auswertung. Idee aus Lucas Mockup: Handy-App mit unterer Navigation
-(Home, Karte, Sortiment, Wunschliste, Profil).
+Später: Umfrage-Auswertung (sobald es Ergebnisse gibt). Ganz am Schluss: Mockup und eventuell Handy-App.
 
 ## Was die Umfrage misst (Tobias Mitterbauer)
 10 Fragen, mind. 30 Personen. Für die App relevant: Würden sie eine PICKD-App nutzen (Frage 8), wie wichtig
@@ -100,8 +103,5 @@ Finanzen) liegen bei Tobias Peham, Fabian Pendl, Tobias Mitterbauer und Dominik 
 
 ## Offene Fragen
 - Gibt es Apps oder Stile, an denen sich PICKD **visuell** orientieren soll? (Abgrenzung zur Konkurrenz steht oben.)
-- Soll der Pfand (0,25 €) bei Getränken in der App angezeigt werden?
-- Soll die untere Navigation aus Lucas Mockup in die Web-App übernommen werden?
-- Wann liefert Luca die Logo-Originaldatei (SVG oder PNG mit transparentem Hintergrund)? Vorhanden ist bisher
-  nur ein Bild der kompletten Wortmarke (Zeichen oben, „PICKD.“ in Weiß mit „D.“ in Lime, darunter
-  „pick what fits.“, auf Dark Green) in niedriger Auflösung. Für die Kopfzeile reicht das nicht scharf.
+- Eine Vektordatei (SVG) des Logos von Luca wäre noch schärfer als das freigestellte PNG.
+- 6 Produkte haben nur Richtwerte bei den Nährwerten (⚠) → von der Packung abschreiben.

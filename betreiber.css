@@ -7,7 +7,7 @@ code { background: var(--farbe-primaer-hell); padding: 1px 5px; border-radius: 4
 
 /* Login */
 .login { max-width: 360px; margin: 40px auto; padding: 28px 24px; display: grid; gap: 10px; text-align: center; }
-.login-logo { width: 64px; height: 64px; margin: 0 auto; }
+.login-logo { width: 64px; height: 64px; margin: 0 auto; border-radius: 15px; }
 .login h1 { font-size: 22px; }
 .login p { margin: 0; }
 .login label { text-align: left; font-weight: 600; font-size: 13px; margin-top: 8px; }

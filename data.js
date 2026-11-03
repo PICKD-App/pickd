@@ -5,6 +5,9 @@
    ein Richt- oder Schätzwert und sollte noch kontrolliert werden.
 
    Nährwerte immer pro 100 g bzw. 100 ml angeben.
+   Getränke in Plastikflasche oder Dose: "pfand: 0.25" eintragen
+   (Einwegpfand Österreich). Der Preis bleibt OHNE Pfand, wie in der
+   Produkttabelle. Getränkekartons (z.B. Vita Coco, Tetra Pak) haben keinen Pfand.
    Labels "High Protein" und "Zuckerfrei" werden automatisch
    berechnet (siehe config.js), "vegan" wird hier eingetragen.
    ========================================================= */
@@ -75,38 +78,38 @@ window.PICKD_PRODUKTE = [
   },
   {
     id: 'voeslauer-still', name: 'Vöslauer still', kategorie: 'Getränk', emoji: '💧',
-    portion: 500, einheit: 'ml', preis: 1.20, einkauf: 0.42, ust: 0.10,
+    portion: 500, einheit: 'ml', preis: 1.20, einkauf: 0.42, ust: 0.10, pfand: 0.25,
     lieferant: 'Getränkegroßhandel', vegan: true, gekuehlt: false,
     naehrwerte: { kcal: 0, fett: 0, kohlenhydrate: 0, zucker: 0, eiweiss: 0, salz: 0 },
     quelle: 'Mineralwasser (keine Nährwerte)', geprueft: true
   },
   {
     id: 'voeslauer-prickelnd', name: 'Vöslauer prickelnd', kategorie: 'Getränk', emoji: '🫧',
-    portion: 500, einheit: 'ml', preis: 1.20, einkauf: 0.42, ust: 0.10,
+    portion: 500, einheit: 'ml', preis: 1.20, einkauf: 0.42, ust: 0.10, pfand: 0.25,
     lieferant: 'Getränkegroßhandel', vegan: true, gekuehlt: false,
     naehrwerte: { kcal: 0, fett: 0, kohlenhydrate: 0, zucker: 0, eiweiss: 0, salz: 0 },
     quelle: 'Mineralwasser (keine Nährwerte)', geprueft: true
   },
   {
     id: 'roemerquelle', name: 'Römerquelle Emotion zuckerfrei', kategorie: 'Getränk', emoji: '🍋',
-    portion: 500, einheit: 'ml', preis: 1.70, einkauf: 0.60, ust: 0.20,
+    portion: 500, einheit: 'ml', preis: 1.70, einkauf: 0.60, ust: 0.20, pfand: 0.25,
     lieferant: 'Getränkegroßhandel', vegan: true, gekuehlt: false,
     naehrwerte: { kcal: 1, fett: 0, kohlenhydrate: 0, zucker: 0, eiweiss: 0, salz: 0 },
     quelle: 'eurogast Datenblatt (Sorte Zitrone-Limette)', geprueft: true
   },
   {
     id: 'coke-zero', name: 'Coca-Cola Zero Dose', kategorie: 'Getränk', emoji: '🥤',
-    portion: 330, einheit: 'ml', preis: 1.70, einkauf: 0.62, ust: 0.20,
+    portion: 330, einheit: 'ml', preis: 1.70, einkauf: 0.62, ust: 0.20, pfand: 0.25,
     lieferant: 'Getränkegroßhandel / Metro', vegan: true, gekuehlt: false,
-    naehrwerte: { kcal: 0.3, fett: 0, kohlenhydrate: 0, zucker: 0, eiweiss: 0, salz: 0.02 },
-    quelle: 'Coca-Cola (Herstellerangabe) – bitte prüfen', geprueft: false
+    naehrwerte: { kcal: 0.2, fett: 0, kohlenhydrate: 0, zucker: 0, eiweiss: 0, salz: 0.02 },
+    quelle: 'Eurogast-Datenblatt & REWE (Herstellerangabe Coca-Cola)', geprueft: true
   },
   {
     id: 'redbull-sf', name: 'Red Bull Sugarfree', kategorie: 'Getränk', emoji: '⚡',
-    portion: 250, einheit: 'ml', preis: 2.20, einkauf: 1.00, ust: 0.20,
+    portion: 250, einheit: 'ml', preis: 2.20, einkauf: 1.00, ust: 0.20, pfand: 0.25,
     lieferant: 'Getränkegroßhandel / Metro', vegan: true, gekuehlt: false,
     naehrwerte: { kcal: 3, fett: 0, kohlenhydrate: 0, zucker: 0, eiweiss: 0, salz: 0.1 },
-    quelle: 'Red Bull (Herstellerangabe) – bitte prüfen', geprueft: false
+    quelle: 'dm.at (Herstellerangabe Red Bull Sugarfree 250 ml)', geprueft: true
   },
   {
     id: 'vitacoco', name: 'Vita Coco Kokoswasser', kategorie: 'Getränk', emoji: '🥥',
@@ -117,7 +120,7 @@ window.PICKD_PRODUKTE = [
   },
   {
     id: 'monster-ultra', name: 'Monster Ultra White', kategorie: 'Getränk', emoji: '🔋',
-    portion: 500, einheit: 'ml', preis: 2.20, einkauf: 1.00, ust: 0.20,
+    portion: 500, einheit: 'ml', preis: 2.20, einkauf: 1.00, ust: 0.20, pfand: 0.25,
     lieferant: 'Getränkegroßhandel / Metro', vegan: false, gekuehlt: false,
     naehrwerte: { kcal: 2, fett: 0, kohlenhydrate: 0.9, zucker: 0, eiweiss: 0, salz: 0.2 },
     quelle: 'REWE (Monster Energy Ultra White)', geprueft: true
@@ -134,7 +137,7 @@ window.PICKD_PRODUKTE = [
     portion: 400, einheit: 'g', preis: 2.30, einkauf: 1.20, ust: 0.10,
     lieferant: 'Metro / Transgourmet', vegan: false, gekuehlt: true,
     naehrwerte: { kcal: 60, fett: 0.3, kohlenhydrate: 6, zucker: 5.5, eiweiss: 10, salz: 0.1 },
-    quelle: 'Richtwert (Ehrmann High Protein Heidelbeere)', geprueft: false
+    quelle: 'Richtwert (Ehrmann High Protein Joghurt Heidelbeere, nicht Skyr) – Packung prüfen', geprueft: false
   },
   {
     id: 'sandwich-lachs', name: 'Sandwich Lachs, Salat, Ei', kategorie: 'Gekühlt', emoji: '🥪',
