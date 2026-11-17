@@ -21,12 +21,16 @@
   --farbe-ok: #3c9a4f;
   --farbe-fast: #d99a00;
   --farbe-leer: #d64545;
+  /* dunklere Varianten für Schrift auf den hellen Ampel-Plaketten (Kontrast ≥ 4,5:1) */
+  --farbe-ok-text: #2d733b;
+  --farbe-fast-text: #896100;
+  --farbe-leer-text: #b23939;
 
   /* Label-Farben */
   --label-protein: #172b24;
-  --label-zuckerfrei: #0e8577;
-  --label-vegan: #4e9a2f;
-  --label-gekuehlt: #0284c7;
+  --label-zuckerfrei: #0e8275;
+  --label-vegan: #428328;
+  --label-gekuehlt: #027bb9;
 
   /* Schrift: Manrope (Bold für Titel, Regular für Text) */
   --schrift: "Manrope", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;

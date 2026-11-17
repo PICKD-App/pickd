@@ -146,7 +146,7 @@
       const entfernung = km != null ? `<span class="entfernung">${istNaechster ? 'Am nächsten · ' : ''}${entfernungText(km)}</span> · ` : '';
       const zeile = aktiv
         ? `<div class="ampel"><span><i class="punkt ${z.passend ? 'ok' : 'leer'}"></i>${z.passend} passende${z.passend === 1 ? 's' : ''} Produkt${z.passend === 1 ? '' : 'e'} verfügbar</span></div>`
-        : `<div class="ampel"><span><i class="punkt ok"></i>${z.ok} verfügbar</span>${z.fast ? `<span><i class="punkt fast"></i>${z.fast} fast leer</span>` : ''}${z.leer ? `<span><i class="punkt leer"></i>${z.leer} aus</span>` : ''}</div>`;
+        : `<div class="ampel"><span><i class="punkt ok"></i>${z.ok} verfügbar</span>${z.fast ? `<span><i class="punkt fast"></i>${z.fast} fast leer</span>` : ''}${z.leer ? `<span><i class="punkt leer"></i>${z.leer} ausverkauft</span>` : ''}</div>`;
       return `<a class="box automat-karte ${gedimmt ? 'gedimmt' : ''} ${istNaechster ? 'naechster' : ''}" href="#/automat/${a.id}" style="text-decoration:none">
         <div class="typ-icon">${typ.emoji}</div>
         <div><div class="titel">${S.esc(a.name)}</div><div class="info">${entfernung}${typ.name} · ${S.esc(a.adresse)}</div>${zeile}</div>
@@ -303,7 +303,7 @@
       ${S.labelsHtml(p)}
       <h3>Nährwerte</h3>
       <table class="tabelle">
-        <thead><tr><th></th><th class="zahl">pro ${einheit100}</th><th class="zahl">pro Packung (${S.portionText(p)})</th></tr></thead>
+        <thead><tr><th><span class="sr-only">Nährwert</span></th><th class="zahl">pro ${einheit100}</th><th class="zahl">pro Packung (${S.portionText(p)})</th></tr></thead>
         <tbody>${zeilen.map(([name, wert, e, hervor]) => `
           <tr class="${hervor ? 'hervor' : ''}"><td>${name}</td><td class="zahl">${S.zahl(wert)} ${e}</td><td class="zahl">${S.zahl(wert * faktor)} ${e}</td></tr>`).join('')}
         </tbody>
