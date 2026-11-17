@@ -1,6 +1,6 @@
 /* =========================================================
    PICKD – Betreiber-Bereich
-   Login · Übersicht · Bestand & Nachfüllen · Statistik · Sortiment
+   Login · Übersicht · Bestand & Nachfüllen · Statistik · Sortiment · Finanzen
    ========================================================= */
 (function () {
   const S = window.PICKD;
@@ -76,7 +76,7 @@
     if (!angemeldet()) return;
     document.querySelectorAll('[data-tab]').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === aktuellerTab));
     const ziel = document.getElementById('tab-inhalt');
-    ({ uebersicht: uebersicht, bestand: bestand, statistik: statistik, sortiment: sortiment })[aktuellerTab](ziel);
+    ({ uebersicht: uebersicht, bestand: bestand, statistik: statistik, sortiment: sortiment, finanzen: finanzen })[aktuellerTab](ziel);
   }
   window.addEventListener('pickd-update', zeichnen);
 
@@ -312,6 +312,187 @@
         S.zuruecksetzen(); meldung('Demo-Daten zurückgesetzt');
       }
     });
+  }
+
+  /* ========== 5. Finanzen (Finanzplan Pilotautomat Schule) ========== */
+  // Kopie der Werte aus finanzen.js – Änderungen hier sind nur zum Ausprobieren
+  const planKopie = () => JSON.parse(JSON.stringify(window.PICKD_FINANZPLAN));
+  let finanzPlan = planKopie();
+
+  function euro0(wert) {
+    return wert.toLocaleString('de-AT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+  }
+  function vorzeichenKlasse(wert) { return wert < 0 ? 'minus' : 'plus'; }
+
+  function finanzen(ziel) {
+    const plan = finanzPlan;
+    const r = window.PICKD_FINANZEN_RECHNEN(plan, window.PICKD_PRODUKTE);
+    const gewaehlt = r.szenarien[plan.gewaehltesSzenario];
+    const be = r.breakEven;
+    const beText = isFinite(be) ? Math.ceil(be) : '–';
+    const besterTag = Math.max(...r.szenarien.map(s => s.proTag));
+    const alleMinus = r.szenarien.every(s => s.ergebnis < 0);
+    const geaendert = JSON.stringify(plan) !== JSON.stringify(window.PICKD_FINANZPLAN);
+
+    // Fazit in einem Satz – richtet sich nach den aktuellen Zahlen
+    let fazit;
+    if (!isFinite(be)) fazit = 'Mit diesen Annahmen verdient der Automat an keinem Verkauf etwas – die Preise decken den Einkauf nicht.';
+    else if (alleMinus && be > besterTag) fazit = `Mit diesen Annahmen macht der Automat im 1. Jahr in allen drei Szenarien Verlust. Die laufenden Kosten sind erst ab rund <strong>${beText} Verkäufen pro Schultag</strong> gedeckt – mehr als im optimistischen Szenario (${besterTag}).`;
+    else if (alleMinus) fazit = `Im 1. Jahr bleibt jedes Szenario im Minus, weil die Startkosten dazukommen. Laufend gedeckt sind die Kosten ab rund <strong>${beText} Verkäufen pro Schultag</strong>.`;
+    else fazit = `Ab rund <strong>${beText} Verkäufen pro Schultag</strong> sind die laufenden Kosten gedeckt. Im gewählten Szenario (${gewaehlt.name}) liegt das Ergebnis im 1. Jahr bei <strong>${euro0(gewaehlt.ergebnis)}</strong>.`;
+
+    // Balken: Szenarien im Vergleich zum Break-even
+    const skala = Math.max(isFinite(be) ? be : 0, besterTag) * 1.12 || 1;
+    const beLinks = isFinite(be) ? Math.min(be / skala * 100, 100) : null;
+
+    // Liquidität: Säulen nach oben (Plus) oder unten (Minus)
+    const maxPlus = Math.max(0, ...r.monate.map(m => m.ende));
+    const maxMinus = Math.max(0, ...r.monate.map(m => -m.ende));
+    const spanne = maxPlus + maxMinus || 1;
+    const nullLinie = maxPlus / spanne * 100;
+
+    const zelle = w => {
+      if (typeof w !== 'number') return `<td class="zahl">${w}</td>`;
+      if (Math.abs(w) < 0.5) return '<td class="zahl leise">–</td>';
+      return `<td class="zahl ${vorzeichenKlasse(w)}">${euro0(w)}</td>`;
+    };
+    const zeile = (titel, werte, klasse) => `<tr class="${klasse || ''}"><td>${titel}</td>${werte.map(zelle).join('')}</tr>`;
+    const eingabe = (id, label, wert, einheit, schritt, min) => `
+      <label class="eingabe-feld" for="${id}"><span>${label}</span>
+        <span class="eingabe-zeile"><input type="number" id="${id}" value="${wert}" step="${schritt}" min="${min}" inputmode="decimal"><span class="einheit">${einheit}</span></span></label>`;
+    const miete = plan.fixkosten[0];
+
+    ziel.innerHTML = `
+      <div class="box abschnitt">
+        <div class="abschnitt-kopf"><h2>Finanzplan Pilotautomat Schule</h2>
+          ${geaendert ? '<button class="knopf leise klein" id="finanz-zurueck">↺ Excel-Werte</button>' : ''}</div>
+        <p class="leise klein" style="margin-top:-6px">Zitzmann AZ500 an einer Schule · 1. Geschäftsjahr · alle Beträge netto · gleiche Formeln wie <code>${S.esc(plan.quelle)}</code>${geaendert ? ' · <strong>Annahmen geändert (nur zum Ausprobieren)</strong>' : ''}</p>
+        <p class="fazit ${alleMinus ? 'warnung' : ''}">${fazit}</p>
+      </div>
+
+      <div class="kpis">
+        <div class="box kpi"><div class="titel">Ø Gewinn je Verkauf</div><div class="wert">${S.euro(r.oDB)}</div><div class="unter">${Math.round(r.oDBProzent * 100)} % vom Nettopreis ${S.euro(r.oNetto)}</div></div>
+        <div class="box kpi ${be > besterTag ? 'warnung' : ''}"><div class="titel">Break-even</div><div class="wert">${beText}</div><div class="unter">Verkäufe pro Schultag nötig</div></div>
+        <div class="box kpi ${gewaehlt.ergebnis < 0 ? 'warnung' : ''}"><div class="titel">Ergebnis Jahr 1</div><div class="wert">${euro0(gewaehlt.ergebnis)}</div><div class="unter">${S.esc(gewaehlt.name)} · ${gewaehlt.proTag} pro Tag</div></div>
+        <div class="box kpi"><div class="titel">Startkapital nötig</div><div class="wert">${euro0(r.startkapitalNoetig)}</div><div class="unter">mindestens, damit das Konto nie ins Minus geht</div></div>
+      </div>
+
+      <div class="box abschnitt">
+        <h2>Verkäufe pro Schultag im Vergleich zum Break-even</h2>
+        <div class="hbalken szenario-balken">${r.szenarien.map((s, i) => `
+          <div class="zeile"><span class="name">${S.esc(s.name)}${i === plan.gewaehltesSzenario ? ' <span class="leise klein">· gewählt</span>' : ''}</span>
+            <div class="spur">${beLinks != null ? `<b class="be-linie" style="left:${beLinks}%"></b>` : ''}<i class="${s.proTag >= be ? 'gut' : 'knapp'}" style="width:${s.proTag / skala * 100}%"></i></div>
+            <span class="zahl">${s.proTag} / Tag</span></div>`).join('')}
+        </div>
+        <p class="leise klein">Strich = Break-even bei ${isFinite(be) ? S.zahl(be, 1) : '–'} Verkäufen pro Schultag (laufende Kosten inkl. Abschreibung, ohne einmalige Startkosten).</p>
+      </div>
+
+      <div class="box abschnitt">
+        <h2 style="margin-bottom:10px">Ergebnis 1. Jahr – drei Szenarien</h2>
+        <div class="tabelle-huelle" tabindex="0" role="region" aria-label="Szenarien Jahr 1, seitlich scrollbar"><table class="tabelle finanz-tabelle">
+          <thead><tr><th>Kennzahl</th>${r.szenarien.map((s, i) => `<th class="zahl ${i === plan.gewaehltesSzenario ? 'gewaehlt' : ''}">${S.esc(s.name)}</th>`).join('')}</tr></thead>
+          <tbody>
+            ${zeile('Verkäufe pro Schultag', r.szenarien.map(s => String(s.proTag)))}
+            ${zeile(`Verkäufe pro Jahr (${r.schultage} Schultage)`, r.szenarien.map(s => s.verkaeufe.toLocaleString('de-AT')))}
+            ${zeile('Umsatz netto', r.szenarien.map(s => s.umsatz))}
+            ${zeile('− Wareneinsatz', r.szenarien.map(s => -s.ware))}
+            ${zeile('Deckungsbeitrag', r.szenarien.map(s => s.db), 'zwischen')}
+            ${r.beteiligung ? zeile('− Umsatzbeteiligung Schule', r.szenarien.map(s => -s.anteilSchule)) : ''}
+            ${zeile('− Fixkosten (12 Monate)', r.szenarien.map(s => -s.fix))}
+            ${zeile('− einmalige Startkosten', r.szenarien.map(s => -s.startkosten))}
+            ${zeile('− Abschreibung Automat', r.szenarien.map(s => -s.abschreibung))}
+            ${zeile('Ergebnis Jahr 1', r.szenarien.map(s => s.ergebnis), 'summe')}
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="box abschnitt">
+        <h2>Kontostand im 1. Jahr</h2>
+        <p class="leise klein" style="margin-top:4px">Szenario ${S.esc(gewaehlt.name)} (${gewaehlt.proTag} Verkäufe pro Schultag), Startkapital ${euro0(plan.startkapital || 0)}. Im Sommer sind Schulferien: keine Verkäufe, aber Fixkosten.</p>
+        <div class="liqui" role="img" aria-label="Kontostand am Monatsende: ${r.monate.map(m => m.monat + ' ' + euro0(m.ende)).join(', ')}">
+          <span class="null-linie" style="top:${nullLinie}%"></span>
+          ${r.monate.map(m => {
+            const h = Math.abs(m.ende) / spanne * 100;
+            const oben = m.ende >= 0 ? nullLinie - h : nullLinie;
+            return `<div class="liqui-spalte" title="${m.monat}: ${euro0(m.ende)}"><i class="${vorzeichenKlasse(m.ende)}" style="top:${oben}%;height:${Math.max(h, 0.6)}%"></i><span class="beschr">${m.monat}</span></div>`;
+          }).join('')}
+        </div>
+        <div class="tabelle-huelle" tabindex="0" role="region" aria-label="Liquiditätsplan, seitlich scrollbar"><table class="tabelle finanz-tabelle liqui-tabelle">
+          <thead><tr><th>Position</th>${r.monate.map(m => `<th class="zahl">${m.monat}</th>`).join('')}</tr></thead>
+          <tbody>
+            ${zeile('Verkäufe', r.monate.map(m => m.verkaeufe.toLocaleString('de-AT')))}
+            ${zeile('+ Einnahmen', r.monate.map(m => m.ein))}
+            ${zeile('− Gründungskosten', r.monate.map(m => -m.aus.gruendung))}
+            ${zeile('− Wareneinkauf', r.monate.map(m => -m.aus.ware))}
+            ${r.beteiligung ? zeile('− Umsatzbeteiligung', r.monate.map(m => -m.aus.beteiligung)) : ''}
+            ${zeile('− Fixkosten', r.monate.map(m => -m.aus.fix))}
+            ${zeile('Kontostand Ende', r.monate.map(m => m.ende), 'summe')}
+          </tbody>
+        </table></div>
+        <p class="leise klein">Vereinfachung wie in der Excel-Datei: Wareneinkauf = verkaufte Menge, die Erstbefüllung bleibt als Lager. Keine USt-Zahlungen und Steuern.</p>
+      </div>
+
+      <div class="box abschnitt">
+        <h2>Annahmen ausprobieren</h2>
+        <p class="leise klein" style="margin:4px 0 12px">Was wäre, wenn …? Änderungen rechnen sofort neu, werden aber nicht gespeichert. Die festen Werte stehen in <code>finanzen.js</code>.</p>
+        <div class="eingaben">
+          ${plan.szenarien.map((s, i) => eingabe('fin-sz-' + i, `Verkäufe/Tag ${s.name.toLowerCase()}`, s.verkaeufeProTag, 'Stk', 1, 0)).join('')}
+          <label class="eingabe-feld" for="fin-gewaehlt"><span>Szenario für den Kontostand</span>
+            <select class="auswahl" id="fin-gewaehlt">${plan.szenarien.map((s, i) => `<option value="${i}" ${i === plan.gewaehltesSzenario ? 'selected' : ''}>${S.esc(s.name)}</option>`).join('')}</select></label>
+          ${eingabe('fin-miete', 'Standortmiete pro Monat', miete.betrag, '€', 10, 0)}
+          ${eingabe('fin-beteiligung', 'Umsatzbeteiligung Schule', Math.round(plan.umsatzbeteiligung * 1000) / 10, '%', 1, 0)}
+          ${eingabe('fin-startkapital', 'Startkapital', plan.startkapital, '€', 500, 0)}
+          ${eingabe('fin-dauer', 'Nutzungsdauer Automat', plan.nutzungsdauerJahre, 'Jahre', 1, 1)}
+        </div>
+      </div>
+
+      <div class="zwei-spalten">
+        <div class="box abschnitt">
+          <h2 style="margin-bottom:10px">Gründungskosten</h2>
+          <ul class="kosten-liste">${plan.gruendung.map(g => `<li><span>${S.esc(g.name)}${g.offen ? ' <span class="status fast">offen</span>' : ''}</span><strong>${euro0(g.betrag)}</strong></li>`).join('')}
+            <li class="summe"><span>Gesamt</span><strong>${euro0(r.gruendung)}</strong></li></ul>
+          <p class="leise klein">Abschreibung: ${euro0(r.abschreibbar)} über ${plan.nutzungsdauerJahre} Jahre = ${euro0(r.abschreibung)} pro Jahr.</p>
+        </div>
+        <div class="box abschnitt">
+          <h2 style="margin-bottom:10px">Laufende Kosten pro Monat</h2>
+          <ul class="kosten-liste">${plan.fixkosten.map(f => `<li><span>${S.esc(f.name)}</span><strong>${euro0(f.betrag)}</strong></li>`).join('')}
+            <li class="summe"><span>Gesamt</span><strong>${euro0(r.fixMonat)}</strong></li></ul>
+          <p class="leise klein">Fast alles sind Team-Schätzungen. An der Schule ist statt Miete auch eine Umsatzbeteiligung möglich.</p>
+        </div>
+      </div>
+
+      <div class="zwei-spalten">
+        <div class="box abschnitt">
+          <h2 style="margin-bottom:10px">Sortiment im Pilot</h2>
+          <p class="klein" style="margin:0 0 8px">${plan.sortiment.filter(s => s.gewicht > 0).length} Produkte, alle gleich gewichtet. Ø Verkauf ${S.euro(r.oNetto)}, Ø Einkauf ${S.euro(r.oEinkauf)} (netto).</p>
+          <ul class="hinweis-liste">${plan.sortiment.filter(s => s.hinweis).map(s => {
+            const p = window.PICKD_PRODUKTE.find(x => x.id === s.id);
+            return `<li><span class="status ${s.gewicht ? 'fast' : 'leer'}">${s.gewicht ? 'prüfen' : 'nicht dabei'}</span><span><strong>${S.esc(p ? p.name : s.id)}</strong> – ${S.esc(s.hinweis)}</span></li>`;
+          }).join('')}</ul>
+        </div>
+        <div class="box abschnitt">
+          <h2 style="margin-bottom:10px">Noch offen im Finanzplan</h2>
+          <ul class="hinweis-liste">${plan.offenePunkte.map(t => `<li><span class="status fast">offen</span><span>${S.esc(t)}</span></li>`).join('')}</ul>
+        </div>
+      </div>`;
+
+    // Eingaben: neu rechnen und Fokus behalten
+    function neu(id) {
+      finanzen(ziel);
+      const el = document.getElementById(id);
+      if (el) { el.focus(); if (el.select && el.type === 'number') el.select(); }
+    }
+    const zahl = el => { const w = parseFloat(String(el.value).replace(',', '.')); return isFinite(w) && w >= 0 ? w : null; };
+    plan.szenarien.forEach((s, i) => ziel.querySelector('#fin-sz-' + i).addEventListener('change', e => {
+      const w = zahl(e.target); if (w != null) s.verkaeufeProTag = w; neu(e.target.id);
+    }));
+    ziel.querySelector('#fin-gewaehlt').addEventListener('change', e => { plan.gewaehltesSzenario = Number(e.target.value); neu(e.target.id); });
+    ziel.querySelector('#fin-miete').addEventListener('change', e => { const w = zahl(e.target); if (w != null) miete.betrag = w; neu(e.target.id); });
+    ziel.querySelector('#fin-beteiligung').addEventListener('change', e => { const w = zahl(e.target); if (w != null) plan.umsatzbeteiligung = Math.min(w, 100) / 100; neu(e.target.id); });
+    ziel.querySelector('#fin-startkapital').addEventListener('change', e => { const w = zahl(e.target); if (w != null) plan.startkapital = w; neu(e.target.id); });
+    ziel.querySelector('#fin-dauer').addEventListener('change', e => { const w = zahl(e.target); if (w != null && w >= 1) plan.nutzungsdauerJahre = w; neu(e.target.id); });
+    const zurueck = ziel.querySelector('#finanz-zurueck');
+    if (zurueck) zurueck.addEventListener('click', () => { finanzPlan = planKopie(); finanzen(ziel); meldung('Werte aus der Excel-Datei wiederhergestellt'); });
   }
 
   ansichtWaehlen();

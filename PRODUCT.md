@@ -32,7 +32,7 @@ Produkt wirken, denn sie wird im Schulwettbewerb gezeigt.
 | Oberfläche | Datei | Modus | Heißt konkret |
 |---|---|---|---|
 | Kunden-Seite (Karte, Automat, Produkt-Detail, Wünsche) | `index.html`, `kunde.js` | **Operate** | Mobil zuerst, mit einer Hand bedienbar, in Sekunden erfassbar. Marke zeigt sich in Details, nicht in Effekten. |
-| Betreiber-Bereich (Übersicht, Bestand, Statistik, Sortiment) | `betreiber.html`, `betreiber.js` | **Operate** | Am Laptop, Daten schnell scannbar, klare Zahlen, Nachfüllbedarf sofort sichtbar. |
+| Betreiber-Bereich (Übersicht, Bestand, Statistik, Sortiment, Finanzen) | `betreiber.html`, `betreiber.js` | **Operate** | Am Laptop, Daten schnell scannbar, klare Zahlen, Nachfüllbedarf sofort sichtbar. |
 | Eventuell später: Landingpage für den Wettbewerb | – | Persuade | Noch nicht geplant. |
 
 ## Marke (aus Lucas Logo-Board, verbindlich)
@@ -97,6 +97,17 @@ sind Nährwertangaben (Frage 9) und Proteingehalt (Frage 6), welche Preise sind 
 Verglichen: boxed. Snackautomat basic (ab 4.740 €), TecMaschin VA-6K (3.731 €), Zitzmann AZ500 (6.499 €).
 Nur der AZ500 bietet laut Anbieter Live-Bestandsüberwachung und digitale Fernüberwachung. Davon hängt ab,
 ob `store.js` später echte Bestandsdaten bekommen kann.
+
+## Finanzplan Pilotautomat Schule (Stand 17.11.2026)
+Quelle: `PICKD_Finanzplan_Pilot_Schule.xlsx`, im Betreiber-Bereich als Tab „Finanzen“ eingebaut (Werte in `finanzen.js`,
+gleiche Formeln wie die Excel-Datei). Ein Zitzmann AZ500 an einer Schule, 180 Schultage, alle Beträge netto.
+- Ø Verkauf 1,58 €, Ø Einkauf 0,85 €, **Ø Gewinn je Verkauf 0,73 €** (16 Produkte; Energydrinks und Sandwich nicht an Schulen)
+- Szenarien 20 / 35 / 50 Verkäufe pro Schultag → Ergebnis Jahr 1: −6.784 € / −4.821 € / −2.859 €
+- **Break-even: rund 65 Verkäufe pro Schultag** (laufend, inkl. Abschreibung), also mehr als im optimistischen Szenario
+- Startkapital nötig (realistisch): rund 11.021 €. Offen: Startkapital, Miete oder Umsatzbeteiligung, Kartenleser, Begründung der Verkaufszahlen
+- Dieser Plan ersetzt die alte Rechnung mit 3,50 € Durchschnittspreis aus dem Businessplan.
+
+Für das Design heißt das: Zahlen ehrlich zeigen, auch wenn sie negativ sind. Minus in Rot, Fazit in einem Satz.
 
 ## Team
 Design & Marketing: Luca Schmalek. App: Luis Till hilft Luca. Weitere Aufgaben (Markt, Technik, Umfrage,

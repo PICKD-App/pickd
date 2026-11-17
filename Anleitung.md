@@ -21,6 +21,7 @@ Gehört zu [[PICKD App]]. Kunden-Seite: `index.html` · Betreiber-Bereich: `betr
 | „Fast leer“-Grenze, Fachgröße, Passwort | `config.js` | `fastLeerGrenze`, `kapazitaetProFach`, `demoPasswort` |
 | Produkt hinzufügen / Preis / Nährwerte | `data.js` | Block in `PICKD_PRODUKTE` kopieren und anpassen |
 | Pfand bei einem Getränk | `data.js` | beim Produkt `pfand: 0.25` (Plastikflasche/Dose). Preis bleibt ohne Pfand |
+| Finanzplan-Werte ändern (Szenarien, Kosten, Gewichtung) | `finanzen.js` | Zahlen anpassen; der Tab „Finanzen“ rechnet automatisch neu. Zum Ausprobieren gehen die wichtigsten Werte auch direkt im Tab |
 | Angebot starten / beenden | Betreiber → Sortiment | In der Spalte „Angebot“ einen günstigeren Preis eintragen; Feld leeren beendet es |
 | Produktfoto statt Emoji | `data.js` | beim Produkt `bild: 'name.png'` ergänzen |
 | Automat / Standort hinzufügen | `data.js` | Block in `PICKD_AUTOMATEN` kopieren, Koordinaten von openstreetmap.org |
@@ -36,7 +37,8 @@ Nach jeder Änderung die Seite im Browser neu laden.
 ## Aufbau (für später / echte App)
 - `store.js` – Datenspeicher & Simulation. Wenn es echte Automaten gibt, wird **nur diese Datei** gegen eine echte Datenbank/Schnittstelle getauscht.
 - `kunde.js` – Kunden-Seite (Karte, Automat, Filter, Suche, Favoriten, nächster Automat per GPS, Produktdetails, Wünsche)
-- `betreiber.js` – Betreiber-Bereich (Übersicht, Bestand, Statistik, Sortiment, Preise & Angebote)
+- `betreiber.js` – Betreiber-Bereich (Übersicht, Bestand, Statistik, Sortiment, Preise & Angebote, Finanzen)
+- `finanzen.js` – Finanzplan Pilotautomat Schule (Werte und Formeln aus `PICKD_Finanzplan_Pilot_Schule.xlsx`)
 - `gemeinsam.js` – gemeinsame Bausteine
 - `style.css`, `betreiber.css` – Layout
 - `PRODUCT.md` – worum es geht, für wen, Marke und Ton · `DESIGN.md` – Design-Regeln (Farben, Schrift, Bausteine, Barrierefreiheit)

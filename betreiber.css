@@ -86,6 +86,46 @@ code { background: var(--farbe-primaer-hell); padding: 1px 5px; border-radius: 4
 
 .auswahl { padding: 7px 12px; border-radius: 999px; border: 1px solid var(--farbe-rand); background: var(--farbe-karte); }
 
+/* Finanzen */
+.fazit { margin: 4px 0 0; padding: 12px 14px; border-radius: var(--radius-klein); background: var(--farbe-primaer-hell); font-size: 14.5px; max-width: 70ch; }
+.fazit.warnung { background: color-mix(in srgb, var(--farbe-leer) 9%, white); }
+.szenario-balken { margin: 12px 0 8px; }
+.szenario-balken .spur { position: relative; overflow: visible; height: 18px; }
+.szenario-balken .spur > i.gut { background: var(--farbe-ok); }
+.szenario-balken .spur > i.knapp { background: var(--farbe-fast); }
+.be-linie { position: absolute; top: -4px; bottom: -4px; width: 3px; margin-left: -1.5px; background: var(--farbe-primaer); border-radius: 2px; z-index: 1; }
+.finanz-tabelle td.zahl.minus { color: var(--farbe-leer-text); }
+.finanz-tabelle tr.zwischen td { font-weight: 650; }
+.finanz-tabelle tr.summe td { font-weight: 800; border-top: 2px solid var(--farbe-text); }
+.finanz-tabelle th.gewaehlt { color: var(--farbe-text); text-decoration: underline; text-decoration-color: var(--farbe-akzent); text-decoration-thickness: 3px; text-underline-offset: 4px; }
+.finanz-tabelle td:first-child { white-space: nowrap; }
+@media (max-width: 600px) {
+  .finanz-tabelle:not(.liqui-tabelle) td:first-child { white-space: normal; min-width: 110px; }
+  .finanz-tabelle:not(.liqui-tabelle) th, .finanz-tabelle:not(.liqui-tabelle) td { padding: 7px 5px; font-size: 13px; }
+  .finanz-tabelle:not(.liqui-tabelle) th { hyphens: auto; -webkit-hyphens: auto; overflow-wrap: anywhere; }
+  .finanz-tabelle:not(.liqui-tabelle) td:first-child { min-width: 96px; }
+}
+.liqui-tabelle { font-size: 13px; }
+.liqui { position: relative; display: flex; gap: 4px; height: 170px; margin: 14px 0 26px; }
+.null-linie { position: absolute; left: 0; right: 0; height: 0; border-top: 1px solid var(--farbe-text-leise); z-index: 1; }
+.liqui-spalte { position: relative; flex: 1; min-width: 0; height: 100%; }
+.liqui-spalte > i { position: absolute; left: 12%; right: 12%; border-radius: 3px; }
+.liqui-spalte > i.minus { background: var(--farbe-leer); }
+.liqui-spalte > i.plus { background: var(--farbe-ok); }
+.liqui-spalte .beschr { position: absolute; bottom: -20px; left: 0; right: 0; text-align: center; font-size: 10.5px; color: var(--farbe-text-leise); }
+.eingaben { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+.eingabe-feld { display: grid; gap: 4px; font-size: 13px; font-weight: 600; }
+.eingabe-zeile { display: flex; align-items: center; gap: 6px; }
+.eingabe-zeile input { width: 100%; min-width: 0; padding: 7px 10px; border: 1px solid var(--farbe-rand); border-radius: 8px; background: var(--farbe-hintergrund); text-align: right; font-variant-numeric: tabular-nums; }
+.einheit { color: var(--farbe-text-leise); font-weight: 500; min-width: 34px; }
+.eingabe-feld .auswahl { width: 100%; }
+.kosten-liste, .hinweis-liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 14px; }
+.kosten-liste li { display: flex; justify-content: space-between; gap: 10px; padding: 5px 0; border-bottom: 1px solid var(--farbe-rand); }
+.kosten-liste li strong { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.kosten-liste li.summe { border-bottom: none; border-top: 2px solid var(--farbe-text); font-weight: 800; }
+.hinweis-liste li { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: start; }
+.hinweis-liste .status { margin-top: 1px; }
+
 /* Meldung unten */
 .toast {
   position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 2000;
