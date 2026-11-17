@@ -57,6 +57,8 @@
 
   function istHighProtein(p) {
     const n = p.naehrwerte;
+    // Nährwerte noch nicht bekannt: nur wenn der Hersteller "High Protein" angibt
+    if (!n) return !!p.highProteinLautHersteller;
     return n.kcal > 0 && (n.eiweiss * 4) / n.kcal >= CFG.highProteinAnteil;
   }
 
@@ -73,7 +75,8 @@
         if (wochentag === 6) faktor = prof.wochenende[0];
         if (wochentag === 0) faktor = prof.wochenende[1];
         const anzahl = Math.round(prof.proTag * faktor * (0.75 + rnd() * 0.5));
-        const produkte = sortimente[a.id].map(id => {
+        // Produkte ohne Preis ("Preis folgt") werden noch nicht verkauft
+        const produkte = sortimente[a.id].filter(id => PRODUKTE.find(x => x.id === id).preis != null).map(id => {
           const p = PRODUKTE.find(x => x.id === id);
           let g = prof.kategorie[p.kategorie] || 1;
           if (istHighProtein(p)) g *= prof.proteinBonus;
@@ -180,7 +183,7 @@
       if (!p) return null;
       // normalPreis = Preis ohne Angebot (aus der Produkttabelle oder vom Betreiber geändert)
       const normalPreis = daten.preise[id] != null ? daten.preise[id] : p.preis;
-      const angebot = daten.angebote[id] != null && daten.angebote[id] < normalPreis;
+      const angebot = normalPreis != null && daten.angebote[id] != null && daten.angebote[id] < normalPreis;
       return Object.assign({}, p, { preis: angebot ? daten.angebote[id] : normalPreis, normalPreis, originalPreis: p.preis, angebot });
     },
     alleProdukte() { return PRODUKTE.map(p => Store.produkt(p.id)); },
@@ -205,7 +208,7 @@
     labels(p) {
       const l = [];
       if (istHighProtein(p)) l.push({ key: 'protein', text: 'High Protein' });
-      if (p.naehrwerte.zucker <= CFG.zuckerfreiMax) l.push({ key: 'zuckerfrei', text: 'Zuckerfrei' });
+      if (p.naehrwerte && p.naehrwerte.zucker <= CFG.zuckerfreiMax) l.push({ key: 'zuckerfrei', text: 'Zuckerfrei' });
       if (p.vegan) l.push({ key: 'vegan', text: 'Vegan' });
       if (p.gekuehlt) l.push({ key: 'gekuehlt', text: 'Gekühlt' });
       return l;
@@ -272,7 +275,7 @@
     verkaufSimulieren() {
       const moeglich = [];
       AUTOMATEN.forEach(a => Store.sortiment(a.id).forEach(id => {
-        if (Store.bestand(a.id, id) > 0) moeglich.push([a.id, id]);
+        if (Store.bestand(a.id, id) > 0 && Store.produkt(id).preis != null) moeglich.push([a.id, id]);
       }));
       if (!moeglich.length) return null;
       const [aId, pId] = moeglich[Math.floor(Math.random() * moeglich.length)];
@@ -316,6 +319,7 @@
       return wert.toLocaleString('de-AT', { maximumFractionDigits: stellen == null ? 1 : stellen });
     },
     gewinnProStueck(p) {
+      if (p.preis == null || p.einkauf == null) return null; // Preis oder Einkauf noch offen
       return p.preis / (1 + p.ust) - p.einkauf;
     }
   };

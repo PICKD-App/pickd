@@ -82,6 +82,10 @@ Für das Design heißt das: PICKD soll **nicht** wie ein klassischer Verkaufsaut
 - Plattform: **Web** (mobil zuerst, funktioniert auch am Desktop).
 
 ## Funktionsumfang
+Sortiment (Stand 17.11.2026, Team-Liste aus dem Teams-Chat): **38 Produkte, 30 pro Automat**, je nach Standort ausgewählt
+(Schulen ohne Energydrinks, Sandwich und Kaffee). Kinder Bueno und Soletti sind raus. Bei 21 neuen Produkten fehlen noch
+Preis, Einkauf und Nährwerte: Die App zeigt dann „Preis folgt“ / „Nährwerte folgen“ statt erfundener Zahlen.
+
 Fertig: Angebote, Pfand-Hinweis, Karte mit allen Automaten, Automaten-Ansicht, Produkt-Detail mit Nährwerten, Filter (High Protein,
 Zuckerfrei, Vegan, Gekühlt), Produktwünsche mit Likes, Produktsuche, Favoriten, nächster Automat per GPS,
 Betreiber-Login (Demo-Passwort), Übersicht, Bestand/Nachfüll-Liste, Statistik, Sortiment & Preise.

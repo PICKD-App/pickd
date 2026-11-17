@@ -38,6 +38,7 @@
 
   /* Preis mit Angebot (alter Preis durchgestrichen) und Pfand-Hinweis */
   S.preisHtml = function (p) {
+    if (p.preis == null) return '<span class="preis-block"><span class="preis folgt">Preis folgt</span></span>';
     return `<span class="preis-block">` +
       (p.angebot ? `<s class="preis-alt" aria-label="statt ${S.euro(p.normalPreis)}">${S.euro(p.normalPreis)}</s>` : '') +
       `<span class="preis ${p.angebot ? 'angebot' : ''}">${S.euro(p.preis)}</span>` +

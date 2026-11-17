@@ -20,6 +20,7 @@ Gehört zu [[PICKD App]]. Kunden-Seite: `index.html` · Betreiber-Bereich: `betr
 | Name / Slogan ändern | `config.js` | `firmenname`, `slogan` |
 | „Fast leer“-Grenze, Fachgröße, Passwort | `config.js` | `fastLeerGrenze`, `kapazitaetProFach`, `demoPasswort` |
 | Produkt hinzufügen / Preis / Nährwerte | `data.js` | Block in `PICKD_PRODUKTE` kopieren und anpassen |
+| Preis oder Nährwerte eines neuen Produkts nachtragen | `data.js` | bei `preis: null` / `einkauf: null` die Zahl eintragen, bei `naehrwerte: null` die Werte pro 100 g/ml von der Packung (dann `geprueft: true`) |
 | Pfand bei einem Getränk | `data.js` | beim Produkt `pfand: 0.25` (Plastikflasche/Dose). Preis bleibt ohne Pfand |
 | Finanzplan-Werte ändern (Szenarien, Kosten, Gewichtung) | `finanzen.js` | Zahlen anpassen; der Tab „Finanzen“ rechnet automatisch neu. Zum Ausprobieren gehen die wichtigsten Werte auch direkt im Tab |
 | Angebot starten / beenden | Betreiber → Sortiment | In der Spalte „Angebot“ einen günstigeren Preis eintragen; Feld leeren beendet es |
@@ -45,7 +46,8 @@ Nach jeder Änderung die Seite im Browser neu laden.
 
 ## Offene Punkte
 - Logo: Kopfzeile (`pickd-zeichen.png`), Login und App-Icons zeigen jetzt das **offizielle** PICKD-Zeichen, freigestellt aus Lucas Logo. Eine Vektordatei (SVG) von Luca wäre noch schärfer.
-- Nährwerte mit ⚠ sind Richt-/Schätzwerte (`geprueft: false` in `data.js`): Trockenfrüchte-Mix (Sorte festlegen), Rice Up, Soletti, Risbellis, Skyr Heidelbeere, Sandwich (hängt vom Bäcker ab). Im Web gibt es dazu nur Nutzer-Datenbanken → **Werte von der Packung abschreiben**. Coca-Cola Zero und Red Bull sind seit 03.11. geprüft.
+- **Sortiment (17.11.):** 38 Produkte laut Team-Liste, jeder Automat 30. Kinder Bueno und Soletti sind raus. Bei den **21 neuen Produkten fehlen noch Preis, Einkauf und Nährwerte** → Kunden sehen „Preis folgt“ / „Nährwerte folgen“, sie werden noch nicht „verkauft“. Preise kann man auch im Betreiber-Bereich unter Sortiment eintragen (nur zum Ausprobieren, im Browser gespeichert). „High Protein“ bekommen sie vorerst nur, wenn es im Produktnamen steht.
+- Nährwerte mit ⚠ sind Richt-/Schätzwerte (`geprueft: false` in `data.js`): Trockenfrüchte-Mix (Sorte festlegen), Rice Up, Risbellis, Skyr Heidelbeere, Sandwich (hängt vom Bäcker ab). Im Web gibt es dazu nur Nutzer-Datenbanken → **Werte von der Packung abschreiben**. Coca-Cola Zero und Red Bull sind seit 03.11. geprüft.
 - „Red Bull Sugarfree Cherry“ aus der Produkttabelle als normales „Red Bull Sugarfree“ eingetragen.
 - ✅ Erledigt: Produktsuche, Favoriten (⭐ im Produkt-Detail, Filter „Favoriten“) und „📍 Nächster Automat“ per GPS.
   - Der Standort funktioniert nur über `https://` (z.B. GitHub Pages) oder `localhost`, nicht beim Öffnen per Doppelklick.

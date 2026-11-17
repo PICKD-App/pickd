@@ -10,6 +10,11 @@
    Produkttabelle. Getränkekartons (z.B. Vita Coco, Tetra Pak) haben keinen Pfand.
    Labels "High Protein" und "Zuckerfrei" werden automatisch
    berechnet (siehe config.js), "vegan" wird hier eingetragen.
+
+   Noch unbekannte Werte: preis/einkauf: null = "Preis folgt",
+   naehrwerte: null = "Nährwerte folgen". Solange Nährwerte fehlen, gilt
+   "High Protein" nur mit highProteinLautHersteller: true (steht so auf der
+   Packung bzw. im Produktnamen).
    ========================================================= */
 
 window.PICKD_PRODUKTE = [
@@ -33,13 +38,6 @@ window.PICKD_PRODUKTE = [
     lieferant: 'ESN (B2B-Anfrage)', vegan: false, gekuehlt: false,
     naehrwerte: { kcal: 389, fett: 19.1, kohlenhydrate: 29.8, zucker: 3.3, eiweiss: 31.6, salz: 0.22 },
     quelle: 'DocMorris/medpex (Herstellerangabe ESN)', geprueft: true
-  },
-  {
-    id: 'bueno-white', name: 'Kinder Bueno White', kategorie: 'Riegel', emoji: '🥛',
-    portion: 39, einheit: 'g', preis: 1.60, einkauf: 0.85, ust: 0.10,
-    lieferant: 'Metro / Transgourmet', vegan: false, gekuehlt: false,
-    naehrwerte: { kcal: 571, fett: 35.9, kohlenhydrate: 53, zucker: 43.9, eiweiss: 8.5, salz: 0.33 },
-    quelle: 'kinder.com (Hersteller Ferrero)', geprueft: true
   },
   {
     id: 'nussmix', name: 'Seeberger Nuss-Mix', kategorie: 'Snack', emoji: '🥜',
@@ -68,13 +66,6 @@ window.PICKD_PRODUKTE = [
     lieferant: 'Metro / Transgourmet', vegan: false, gekuehlt: true,
     naehrwerte: { kcal: 51, fett: 0.1, kohlenhydrate: 3.6, zucker: 3.6, eiweiss: 9, salz: 0.1 },
     quelle: 'REWE (Ehrmann High Protein Skyr Natural)', geprueft: true
-  },
-  {
-    id: 'soletti', name: 'Soletti Salzbrezeln', kategorie: 'Snack', emoji: '🥨',
-    portion: 40, einheit: 'g', preis: 1.20, einkauf: 0.55, ust: 0.10,
-    lieferant: 'Metro / Transgourmet', vegan: true, gekuehlt: false,
-    naehrwerte: { kcal: 378, fett: 2.6, kohlenhydrate: 73, zucker: 2, eiweiss: 13, salz: 4.5 },
-    quelle: 'fddb.info (Soletti Salzstangerl, nicht bestätigt)', geprueft: false
   },
   {
     id: 'voeslauer-still', name: 'Vöslauer still', kategorie: 'Getränk', emoji: '💧',
@@ -145,6 +136,155 @@ window.PICKD_PRODUKTE = [
     lieferant: 'Frischeanbieter / Bäckerei', vegan: false, gekuehlt: true,
     naehrwerte: { kcal: 220, fett: 10, kohlenhydrate: 22, zucker: 3, eiweiss: 11, salz: 1.2 },
     quelle: 'Schätzwert – hängt vom Bäcker ab', geprueft: false
+  },
+
+  /* ---------- Neu laut Team-Liste (17.11.2026): Preis, Einkauf und Nährwerte folgen ---------- */
+  {
+    id: 'risbellis-apfel', name: 'Risbellis Apfel', kategorie: 'Snack', emoji: '🍏',
+    portion: 40, einheit: 'g', preis: null, einkauf: null, ust: 0.10,
+    lieferant: 'offen', vegan: false, gekuehlt: false,
+    naehrwerte: null,
+    quelle: 'Team-Liste (Teams-Chat, 17.11.2026) – Nährwerte noch von der Packung abschreiben', geprueft: false
+  },
+  {
+    id: 'rice-krispies', name: 'Kellogg\'s Rice Krispies', kategorie: 'Snack', emoji: '🍚',
+    portion: 40, einheit: 'g', preis: null, einkauf: null, ust: 0.10,
+    lieferant: 'offen', vegan: false, gekuehlt: false,
+    naehrwerte: null,
+    quelle: 'Team-Liste (Teams-Chat, 17.11.2026) – Nährwerte noch von der Packung abschreiben', geprueft: false
+  },
+  {
+    id: 'barebells', name: 'Barebells Proteinriegel', kategorie: 'Riegel', emoji: '🍫',
+    portion: 55, einheit: 'g', preis: null, einkauf: null, ust: 0.10,
+    lieferant: 'offen', vegan: false, gekuehlt: false,
+    naehrwerte: null,
+    quelle: 'Team-Liste (Teams-Chat, 17.11.2026) – Nährwerte noch von der Packung abschreiben', geprueft: false
+  },
+  {
+    id: 'power-system-joghurt', name: 'Power System Proteinriegel Joghurt', kategorie: 'Riegel', emoji: '🥛',
+    portion: 35, einheit: 'g', preis: null, einkauf: null, ust: 0.10,
+    lieferant: 'offen', vegan: false, gekuehlt: false,
+    naehrwerte: null,
+    quelle: 'Team-Liste (Teams-Chat, 17.11.2026) – Nährwerte noch von der Packung abschreiben', geprueft: false
+  },
+  {
+    id: 'isostar-hp', name: 'Isostar High Protein Riegel', kategorie: 'Riegel', emoji: '🏃',
+    portion: 35, einheit: 'g', preis: null, einkauf: null, ust: 0.10,
+    lieferant: 'offen', vegan: false, gekuehlt: false, highProteinLautHersteller: true,
+    naehrwerte: null,
+    quelle: 'Team-Liste (Teams-Chat, 17.11.2026) – Nährwerte noch von der Packung abschreiben', geprueft: false
+  },
+  {
+    id: 'babybel-hp', name: 'Mini Babybel High Protein', kategorie: 'Snack', emoji: '🧀',
+    portion: 140, einheit: 'g', preis: null, einkauf: null, ust: 0.10,
+    lieferant: 'offen', vegan: false, gekuehlt: true, highProteinLautHersteller: true,
+    naehrwerte: null,
+    quelle: 'Team-Liste (Teams-Chat, 17.11.2026) – Nährwerte noch von der Packung abschreiben', geprueft: false
+  },
+  {
+    id: 'salanettis-hp', name: 'Sorger Salanettis High Protein', kategorie: 'Snack', emoji: '🥓',
+    portion: 75, einheit: 'g', preis: null, einkauf: null, ust: 0.10,
+    lieferant: 'offen', vegan: false, gekuehlt: false, highProteinLautHersteller: true,
+    naehrwerte: null,
+    quelle: 'Team-Liste (Teams-Chat, 17.11.2026) – Nährwerte noch von der Packung abschreiben', geprueft: false
+  },
+  {
+    id: 'milsani-kaese-hp', name: 'Milsani High Protein Käsescheiben', kategorie: 'Gekühlt', emoji: '🧀',
+    portion: 150, einheit: 'g', preis: null, einkauf: null, ust: 0.10,
+    lieferant: 'offen', vegan: false, gekuehlt: true, highProteinLautHersteller: true,
+    naehrwerte: null,
+    quelle: 'Team-Liste (Teams-Chat, 17.11.2026) – Nährwerte noch von der Packung abschreiben', geprueft: false
+  },
+  {
+    id: 'cottage-cheese', name: 'Alpengut Cottage Cheese Leicht', kategorie: 'Gekühlt', emoji: '🥣',
+    portion: 250, einheit: 'g', preis: null, einkauf: null, ust: 0.10,
+    lieferant: 'offen', vegan: false, gekuehlt: true,
+    naehrwerte: null,
+    quelle: 'Team-Liste (Teams-Chat, 17.11.2026) – Nährwerte noch von der Packung abschreiben', geprueft: false
+  },
+  {
+    id: 'ehrmann-pudding-hp', name: 'Ehrmann High Protein Pudding Schoko', kategorie: 'Gekühlt', emoji: '🍮',
+    portion: 200, einheit: 'g', preis: null, einkauf: null, ust: 0.10,
+    lieferant: 'offen', vegan: false, gekuehlt: true, highProteinLautHersteller: true,
+    naehrwerte: null,
+    quelle: 'Team-Liste (Teams-Chat, 17.11.2026) – Nährwerte noch von der Packung abschreiben', geprueft: false
+  },
+  {
+    id: 'noem-skyr-vanille', name: 'nöm PRO Protein Skyr Vanille', kategorie: 'Gekühlt', emoji: '🥄',
+    portion: 200, einheit: 'g', preis: null, einkauf: null, ust: 0.10,
+    lieferant: 'offen', vegan: false, gekuehlt: true,
+    naehrwerte: null,
+    quelle: 'Team-Liste (Teams-Chat, 17.11.2026) – Nährwerte noch von der Packung abschreiben', geprueft: false
+  },
+  {
+    id: 'milbona-drink-vanille', name: 'Milbona High-Protein Drink Vanille', kategorie: 'Getränk', emoji: '🥛',
+    portion: 350, einheit: 'ml', preis: null, einkauf: null, ust: 0.10,
+    lieferant: 'offen', vegan: false, gekuehlt: true, highProteinLautHersteller: true,
+    naehrwerte: null,
+    quelle: 'Team-Liste (Teams-Chat, 17.11.2026) – Nährwerte noch von der Packung abschreiben', geprueft: false
+  },
+  {
+    id: 'noem-drink-erdbeere', name: 'nöm PRO Proteindrink Skyr Erdbeere', kategorie: 'Getränk', emoji: '🍓',
+    portion: 250, einheit: 'ml', preis: null, einkauf: null, ust: 0.10,
+    lieferant: 'offen', vegan: false, gekuehlt: true,
+    naehrwerte: null,
+    quelle: 'Team-Liste (Teams-Chat, 17.11.2026) – Nährwerte noch von der Packung abschreiben', geprueft: false
+  },
+  {
+    id: 'milsani-pudding-hp', name: 'Milsani High Protein Pudding Schoko', kategorie: 'Gekühlt', emoji: '🍫',
+    portion: 200, einheit: 'g', preis: null, einkauf: null, ust: 0.10,
+    lieferant: 'offen', vegan: false, gekuehlt: true, highProteinLautHersteller: true,
+    naehrwerte: null,
+    quelle: 'Team-Liste (Teams-Chat, 17.11.2026) – Nährwerte noch von der Packung abschreiben', geprueft: false
+  },
+  {
+    id: 'milbona-pudding-hp', name: 'Milbona High-Protein Pudding Vanille', kategorie: 'Gekühlt', emoji: '🍮',
+    portion: 200, einheit: 'g', preis: null, einkauf: null, ust: 0.10,
+    lieferant: 'offen', vegan: false, gekuehlt: true, highProteinLautHersteller: true,
+    naehrwerte: null,
+    quelle: 'Team-Liste (Teams-Chat, 17.11.2026) – Nährwerte noch von der Packung abschreiben', geprueft: false
+  },
+  {
+    id: 'milsani-topfen', name: 'Milsani Protein Topfencreme Erdbeere', kategorie: 'Gekühlt', emoji: '🍓',
+    portion: 235, einheit: 'g', preis: null, einkauf: null, ust: 0.10,
+    lieferant: 'offen', vegan: false, gekuehlt: true,
+    naehrwerte: null,
+    quelle: 'Team-Liste (Teams-Chat, 17.11.2026) – Nährwerte noch von der Packung abschreiben', geprueft: false
+  },
+  {
+    id: 'spar-joghurt-hp', name: 'Spar High Protein Joghurt Natur', kategorie: 'Gekühlt', emoji: '🥛',
+    portion: 200, einheit: 'g', preis: null, einkauf: null, ust: 0.10,
+    lieferant: 'offen', vegan: false, gekuehlt: true, highProteinLautHersteller: true,
+    naehrwerte: null,
+    quelle: 'Team-Liste (Teams-Chat, 17.11.2026) – Nährwerte noch von der Packung abschreiben', geprueft: false
+  },
+  {
+    id: 'milbona-milchreis-hp', name: 'Milbona High-Protein Milchreis', kategorie: 'Gekühlt', emoji: '🍚',
+    portion: 200, einheit: 'g', preis: null, einkauf: null, ust: 0.10,
+    lieferant: 'offen', vegan: false, gekuehlt: true, highProteinLautHersteller: true,
+    naehrwerte: null,
+    quelle: 'Team-Liste (Teams-Chat, 17.11.2026) – Nährwerte noch von der Packung abschreiben', geprueft: false
+  },
+  {
+    id: 'noem-pro35-banane', name: 'nöm PRO 35 Proteingetränk Banane', kategorie: 'Getränk', emoji: '🍌',
+    portion: 350, einheit: 'ml', preis: null, einkauf: null, ust: 0.10,
+    lieferant: 'offen', vegan: false, gekuehlt: true,
+    naehrwerte: null,
+    quelle: 'Team-Liste (Teams-Chat, 17.11.2026) – Nährwerte noch von der Packung abschreiben', geprueft: false
+  },
+  {
+    id: 'schaerdinger-kakao', name: 'Schärdinger Protein Traum Kakao', kategorie: 'Getränk', emoji: '🥤',
+    portion: 330, einheit: 'ml', preis: null, einkauf: null, ust: 0.10,
+    lieferant: 'offen', vegan: false, gekuehlt: true,
+    naehrwerte: null,
+    quelle: 'Team-Liste (Teams-Chat, 17.11.2026) – Nährwerte noch von der Packung abschreiben', geprueft: false
+  },
+  {
+    id: 'emmi-latte-hp', name: 'Emmi High Protein Latte Kaffee', kategorie: 'Getränk', emoji: '☕',
+    portion: 230, einheit: 'ml', preis: null, einkauf: null, ust: 0.10,
+    lieferant: 'offen', vegan: false, gekuehlt: true, highProteinLautHersteller: true,
+    naehrwerte: null,
+    quelle: 'Team-Liste (Teams-Chat, 17.11.2026) – Nährwerte noch von der Packung abschreiben', geprueft: false
   }
 ];
 
@@ -156,40 +296,70 @@ window.PICKD_AUTOMATEN = [
     adresse: 'Bundesschulzentrum, Waldstraße, 3100 St. Pölten',
     koordinaten: [48.20731, 15.61943], gekuehlt: true,
     beschreibung: 'Im Schulgebäude der HAK/HAS',
-    sortiment: ['rawbite', 'more-bar', 'bueno-white', 'nussmix', 'fruechtemix', 'riceup', 'soletti',
-      'voeslauer-still', 'voeslauer-prickelnd', 'roemerquelle', 'coke-zero', 'vitacoco', 'risbellis']
+    sortiment: [
+      'rawbite', 'more-bar', 'esn-bar', 'nussmix', 'fruechtemix', 'riceup', 'skyr-natur', 'voeslauer-still',
+      'voeslauer-prickelnd', 'roemerquelle', 'coke-zero', 'vitacoco', 'risbellis', 'risbellis-apfel',
+      'rice-krispies', 'barebells', 'power-system-joghurt', 'isostar-hp', 'babybel-hp', 'salanettis-hp',
+      'ehrmann-pudding-hp', 'noem-skyr-vanille', 'milbona-drink-vanille', 'noem-drink-erdbeere',
+      'milsani-pudding-hp', 'milbona-pudding-hp', 'milsani-topfen', 'spar-joghurt-hp', 'noem-pro35-banane',
+      'schaerdinger-kakao'
+    ]
   },
   {
     id: 'htl', name: 'HTL St. Pölten', typ: 'schule',
     adresse: 'Waldstraße 3, 3100 St. Pölten',
     koordinaten: [48.20706, 15.61869], gekuehlt: true,
     beschreibung: 'Im Schulgebäude der HTL',
-    sortiment: ['rawbite', 'more-bar', 'esn-bar', 'bueno-white', 'nussmix', 'riceup', 'soletti',
-      'voeslauer-still', 'voeslauer-prickelnd', 'roemerquelle', 'coke-zero', 'vitacoco', 'risbellis']
+    sortiment: [
+      'rawbite', 'more-bar', 'esn-bar', 'nussmix', 'riceup', 'skyr-natur', 'voeslauer-still',
+      'voeslauer-prickelnd', 'roemerquelle', 'coke-zero', 'vitacoco', 'risbellis', 'skyr-heidelbeere',
+      'rice-krispies', 'barebells', 'power-system-joghurt', 'isostar-hp', 'babybel-hp', 'salanettis-hp',
+      'ehrmann-pudding-hp', 'noem-skyr-vanille', 'milbona-drink-vanille', 'noem-drink-erdbeere',
+      'milsani-pudding-hp', 'milbona-pudding-hp', 'milsani-topfen', 'spar-joghurt-hp',
+      'milbona-milchreis-hp', 'noem-pro35-banane', 'schaerdinger-kakao'
+    ]
   },
   {
     id: 'speedfit', name: 'Speedfit St. Pölten Nord', typ: 'gym',
     adresse: 'Dr.-Doch-Gasse 3, 3107 St. Pölten',
     koordinaten: [48.21940, 15.64429], gekuehlt: true,
     beschreibung: 'Im Fitnessstudio beim Eingang',
-    sortiment: ['rawbite', 'more-bar', 'esn-bar', 'nussmix', 'skyr-natur', 'skyr-heidelbeere',
-      'voeslauer-still', 'voeslauer-prickelnd', 'roemerquelle', 'redbull-sf', 'vitacoco', 'monster-ultra', 'coke-zero']
+    sortiment: [
+      'rawbite', 'more-bar', 'esn-bar', 'nussmix', 'skyr-natur', 'voeslauer-still', 'voeslauer-prickelnd',
+      'roemerquelle', 'redbull-sf', 'vitacoco', 'monster-ultra', 'skyr-heidelbeere', 'barebells',
+      'power-system-joghurt', 'isostar-hp', 'babybel-hp', 'salanettis-hp', 'milsani-kaese-hp',
+      'cottage-cheese', 'ehrmann-pudding-hp', 'noem-skyr-vanille', 'milbona-drink-vanille',
+      'noem-drink-erdbeere', 'milsani-pudding-hp', 'milbona-pudding-hp', 'milsani-topfen', 'spar-joghurt-hp',
+      'noem-pro35-banane', 'schaerdinger-kakao', 'emmi-latte-hp'
+    ]
   },
   {
     id: 'hbf', name: 'Hauptbahnhof St. Pölten', typ: 'bahnhof',
     adresse: 'Bahnhofplatz 1, 3100 St. Pölten',
     koordinaten: [48.20828, 15.62468], gekuehlt: true,
     beschreibung: 'In der Bahnhofshalle',
-    sortiment: ['rawbite', 'more-bar', 'bueno-white', 'nussmix', 'fruechtemix', 'soletti', 'sandwich-lachs',
-      'voeslauer-still', 'voeslauer-prickelnd', 'roemerquelle', 'coke-zero', 'redbull-sf', 'monster-ultra', 'risbellis']
+    sortiment: [
+      'rawbite', 'more-bar', 'esn-bar', 'nussmix', 'fruechtemix', 'riceup', 'skyr-natur', 'voeslauer-still',
+      'voeslauer-prickelnd', 'roemerquelle', 'coke-zero', 'redbull-sf', 'vitacoco', 'monster-ultra',
+      'risbellis', 'sandwich-lachs', 'risbellis-apfel', 'rice-krispies', 'barebells', 'power-system-joghurt',
+      'isostar-hp', 'babybel-hp', 'salanettis-hp', 'ehrmann-pudding-hp', 'noem-skyr-vanille',
+      'milbona-drink-vanille', 'noem-drink-erdbeere', 'noem-pro35-banane', 'schaerdinger-kakao',
+      'emmi-latte-hp'
+    ]
   },
   {
     id: 'ekz-sued', name: 'EKZ Süd St. Pölten', typ: 'einkaufszentrum',
     adresse: 'Rödlgasse, 3100 St. Pölten',
     koordinaten: [48.18225, 15.62086], gekuehlt: true,
     beschreibung: 'Im Einkaufszentrum',
-    sortiment: ['rawbite', 'more-bar', 'bueno-white', 'riceup', 'risbellis', 'skyr-natur', 'skyr-heidelbeere',
-      'sandwich-lachs', 'soletti', 'voeslauer-still', 'roemerquelle', 'coke-zero', 'vitacoco']
+    sortiment: [
+      'rawbite', 'more-bar', 'esn-bar', 'nussmix', 'fruechtemix', 'riceup', 'skyr-natur', 'voeslauer-still',
+      'voeslauer-prickelnd', 'roemerquelle', 'coke-zero', 'vitacoco', 'risbellis', 'skyr-heidelbeere',
+      'sandwich-lachs', 'risbellis-apfel', 'rice-krispies', 'barebells', 'babybel-hp', 'ehrmann-pudding-hp',
+      'noem-skyr-vanille', 'milbona-drink-vanille', 'noem-drink-erdbeere', 'milsani-pudding-hp',
+      'milbona-pudding-hp', 'milsani-topfen', 'spar-joghurt-hp', 'noem-pro35-banane', 'schaerdinger-kakao',
+      'emmi-latte-hp'
+    ]
   }
 ];
 

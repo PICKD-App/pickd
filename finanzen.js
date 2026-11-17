@@ -2,7 +2,8 @@
    PICKD – Finanzplan Pilotautomat Schule
    Werte aus "PICKD_Finanzplan_Pilot_Schule.xlsx" (Blatt "Annahmen" und
    "Sortiment Schule"). Ändert sich der Plan, hier die Zahlen anpassen.
-   Alle Beträge netto. Preise kommen aus data.js (Produkttabelle).
+   Alle Beträge netto. Preise und Einkauf stehen hier beim Sortiment, so wie
+   in der Excel-Datei – unabhängig vom aktuellen Website-Sortiment (data.js).
    offen: true = in der Excel-Datei gelb markiert (noch offen / prüfen)
    ========================================================= */
 window.PICKD_FINANZPLAN = {
@@ -43,27 +44,28 @@ window.PICKD_FINANZPLAN = {
   umsatzbeteiligung: 0, // Anteil vom Nettoumsatz für die Schule (0,1 = 10 %), noch offen
   startkapital: 0,      // Eigenmittel/Finanzierung, noch offen
 
-  // Sortiment im Schul-Automaten: Gewichtung 1 = normal, 2 = doppelt so oft, 0 = nicht im Automaten
+  // Sortiment im Schul-Automaten laut Excel (Stand vor der Erweiterung auf 38 Produkte).
+  // Preis = Verkauf brutto, einkauf = netto. Gewichtung 1 = normal, 2 = doppelt so oft, 0 = nicht im Automaten
   sortiment: [
-    { id: 'rawbite', gewicht: 1 },
-    { id: 'more-bar', gewicht: 1 },
-    { id: 'esn-bar', gewicht: 1 },
-    { id: 'bueno-white', gewicht: 1, hinweis: 'passt wenig zum USP „gesünder“ – als günstige Alternative begründen oder streichen' },
-    { id: 'nussmix', gewicht: 1 },
-    { id: 'fruechtemix', gewicht: 1 },
-    { id: 'riceup', gewicht: 1 },
-    { id: 'skyr-natur', gewicht: 1 },
-    { id: 'soletti', gewicht: 1, hinweis: 'passt wenig zum USP „gesünder“ – als günstige Alternative begründen oder streichen' },
-    { id: 'voeslauer-still', gewicht: 1 },
-    { id: 'voeslauer-prickelnd', gewicht: 1 },
-    { id: 'roemerquelle', gewicht: 1 },
-    { id: 'coke-zero', gewicht: 1 },
-    { id: 'redbull-sf', gewicht: 0, hinweis: 'Energydrink – Leitlinie Schulbuffet (Sozialministerium) rät für Schulen ab' },
-    { id: 'vitacoco', gewicht: 1 },
-    { id: 'monster-ultra', gewicht: 0, hinweis: 'Energydrink – Leitlinie Schulbuffet (Sozialministerium) rät für Schulen ab' },
-    { id: 'risbellis', gewicht: 1 },
-    { id: 'skyr-heidelbeere', gewicht: 1 },
-    { id: 'sandwich-lachs', gewicht: 0, hinweis: 'Frischware: Kühlkette/Ablaufdatum – erst nach der Pilotphase' }
+    { id: 'rawbite', name: 'Rawbite Riegel', ust: 0.1, einkauf: 1.2, preis: 2.3, gewicht: 1 },
+    { id: 'more-bar', name: 'MORE Protein Riegel 50 g', ust: 0.1, einkauf: 1.15, preis: 2.2, gewicht: 1 },
+    { id: 'esn-bar', name: 'ESN Designer Bar 45 g', ust: 0.1, einkauf: 1.4, preis: 2.6, gewicht: 1 },
+    { id: 'bueno-white', name: 'Kinder Bueno White 39 g', ust: 0.1, einkauf: 0.85, preis: 1.6, gewicht: 1, hinweis: 'passt wenig zum USP „gesünder“ – als günstige Alternative begründen oder streichen' },
+    { id: 'nussmix', name: 'Seeberger Nuss-Mix 40 g', ust: 0.1, einkauf: 0.85, preis: 1.7, gewicht: 1 },
+    { id: 'fruechtemix', name: 'Seeberger Trockenfrüchte-Mix 50 g', ust: 0.1, einkauf: 0.9, preis: 1.7, gewicht: 1 },
+    { id: 'riceup', name: 'Rice Up Reiswaffeln Schoko 60 g', ust: 0.1, einkauf: 0.7, preis: 1.4, gewicht: 1 },
+    { id: 'skyr-natur', name: 'Ehrmann Skyr Natur 250 g', ust: 0.1, einkauf: 0.95, preis: 1.8, gewicht: 1 },
+    { id: 'soletti', name: 'Soletti Salzbrezeln 40 g', ust: 0.1, einkauf: 0.55, preis: 1.2, gewicht: 1, hinweis: 'passt wenig zum USP „gesünder“ – als günstige Alternative begründen oder streichen' },
+    { id: 'voeslauer-still', name: 'Vöslauer still 0,5 L', ust: 0.1, einkauf: 0.42, preis: 1.2, gewicht: 1 },
+    { id: 'voeslauer-prickelnd', name: 'Vöslauer prickelnd 0,5 L', ust: 0.1, einkauf: 0.42, preis: 1.2, gewicht: 1 },
+    { id: 'roemerquelle', name: 'Römerquelle Emotion zuckerfrei 0,5 L', ust: 0.2, einkauf: 0.6, preis: 1.7, gewicht: 1 },
+    { id: 'coke-zero', name: 'Coca-Cola Zero 0,33 L Dose', ust: 0.2, einkauf: 0.62, preis: 1.7, gewicht: 1 },
+    { id: 'redbull-sf', name: 'Red Bull Sugarfree Cherry 0,25 L Dose', ust: 0.2, einkauf: 1, preis: 2.2, gewicht: 0, hinweis: 'Energydrink – Leitlinie Schulbuffet (Sozialministerium) rät für Schulen ab' },
+    { id: 'vitacoco', name: 'Vita Coco Kokoswasser 330 ml', ust: 0.2, einkauf: 1.25, preis: 2.4, gewicht: 1 },
+    { id: 'monster-ultra', name: 'Monster Ultra White 0,5 L', ust: 0.2, einkauf: 1, preis: 2.2, gewicht: 0, hinweis: 'Energydrink – Leitlinie Schulbuffet (Sozialministerium) rät für Schulen ab' },
+    { id: 'risbellis', name: 'Risbellis Honig', ust: 0.1, einkauf: 0.6, preis: 1.3, gewicht: 1 },
+    { id: 'skyr-heidelbeere', name: 'Ehrmann Skyr Heidelbeere 400 g', ust: 0.1, einkauf: 1.2, preis: 2.3, gewicht: 1 },
+    { id: 'sandwich-lachs', name: 'Sandwich Lachs, Salat, Ei', ust: 0.1, einkauf: 1.9, preis: 3.5, gewicht: 0, hinweis: 'Frischware: Kühlkette/Ablaufdatum – erst nach der Pilotphase' }
   ],
 
   offenePunkte: [
@@ -77,18 +79,17 @@ window.PICKD_FINANZPLAN = {
 };
 
 /* Rechnet den Finanzplan genau wie die Excel-Datei.
-   plan: PICKD_FINANZPLAN (oder eine geänderte Kopie), produkte: PICKD_PRODUKTE */
-window.PICKD_FINANZEN_RECHNEN = function (plan, produkte) {
+   plan: PICKD_FINANZPLAN (oder eine geänderte Kopie) */
+window.PICKD_FINANZEN_RECHNEN = function (plan) {
   const summe = arr => arr.reduce((s, x) => s + x, 0);
 
   // Ø-Werte pro Verkauf, gewichtet ("Sortiment Schule")
   let gewSumme = 0, netto = 0, einkauf = 0;
   plan.sortiment.forEach(s => {
-    const p = produkte.find(x => x.id === s.id);
-    if (!p || !s.gewicht) return;
+    if (!s.gewicht) return;
     gewSumme += s.gewicht;
-    netto += p.preis / (1 + p.ust) * s.gewicht;
-    einkauf += p.einkauf * s.gewicht;
+    netto += s.preis / (1 + s.ust) * s.gewicht;
+    einkauf += s.einkauf * s.gewicht;
   });
   const oNetto = gewSumme ? netto / gewSumme : 0;
   const oEinkauf = gewSumme ? einkauf / gewSumme : 0;
