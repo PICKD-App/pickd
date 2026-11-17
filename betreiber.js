@@ -44,7 +44,7 @@
   function heuteStart() { const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime(); }
   function kennzahlen(verkaeufe) {
     let umsatz = 0, gewinn = 0;
-    verkaeufe.forEach(v => { const p = S.produkt(v[2]); umsatz += p.preis; gewinn += S.gewinnProStueck(p); });
+    verkaeufe.forEach(v => { const p = S.produkt(v[2]); umsatz += p.preis || 0; gewinn += S.gewinnProStueck(p) || 0; });
     return { stueck: verkaeufe.length, umsatz, gewinn };
   }
   function bestandsInfo(automatId) {
@@ -273,14 +273,14 @@
             ${automaten.map(a => `<th class="mitte" title="${S.esc(a.name)}">${S.typen[a.typ].emoji}<br><span class="klein">${S.esc(a.name.replace(' St. Pölten', ''))}</span></th>`).join('')}</tr></thead>
           <tbody>${S.alleProdukte().map(p => {
             const gewinn = S.gewinnProStueck(p);
-            const marge = gewinn / (p.preis / (1 + p.ust));
-            const geaendert = Math.abs(p.normalPreis - p.originalPreis) > 0.001;
+            const marge = gewinn == null ? null : gewinn / (p.preis / (1 + p.ust));
+            const geaendert = p.normalPreis != null && (p.originalPreis == null || Math.abs(p.normalPreis - p.originalPreis) > 0.001);
             return `<tr><td>${p.emoji} ${S.esc(p.name)}<br><span class="klein leise">${S.portionText(p)} · ${S.esc(p.lieferant)}</span></td>
-              <td class="zahl">${S.euro(p.einkauf)}</td>
-              <td class="zahl"><input type="number" step="0.05" min="0.1" value="${p.normalPreis.toFixed(2)}" data-preis="${p.id}" class="${geaendert ? 'geaendert' : ''}" aria-label="Preis ${S.esc(p.name)}"></td>
-              <td class="zahl"><input type="number" step="0.05" min="0.1" value="${p.angebot ? p.preis.toFixed(2) : ''}" placeholder="–" data-angebot="${p.id}" class="${p.angebot ? 'geaendert' : ''}" aria-label="Angebotspreis ${S.esc(p.name)}"></td>
-              <td class="zahl">${S.euro(gewinn)}</td>
-              <td class="zahl">${Math.round(marge * 100)} %</td>
+              <td class="zahl">${p.einkauf == null ? '<span class="leise">offen</span>' : S.euro(p.einkauf)}</td>
+              <td class="zahl"><input type="number" step="0.05" min="0.1" value="${p.normalPreis == null ? '' : p.normalPreis.toFixed(2)}" placeholder="folgt" data-preis="${p.id}" class="${geaendert ? 'geaendert' : ''}" aria-label="Preis ${S.esc(p.name)}"></td>
+              <td class="zahl"><input type="number" step="0.05" min="0.1" value="${p.angebot ? p.preis.toFixed(2) : ''}" placeholder="–" data-angebot="${p.id}" class="${p.angebot ? 'geaendert' : ''}" aria-label="Angebotspreis ${S.esc(p.name)}" ${p.normalPreis == null ? 'disabled' : ''}></td>
+              <td class="zahl">${gewinn == null ? '<span class="leise">–</span>' : S.euro(gewinn)}</td>
+              <td class="zahl">${marge == null ? '<span class="leise">–</span>' : Math.round(marge * 100) + ' %'}</td>
               ${automaten.map(a => `<td class="mitte"><input type="checkbox" data-sortiment="${a.id}|${p.id}" ${S.sortiment(a.id).includes(p.id) ? 'checked' : ''} aria-label="${S.esc(p.name)} in ${S.esc(a.name)}"></td>`).join('')}
             </tr>`;
           }).join('')}</tbody>
@@ -299,7 +299,7 @@
         if (S.produkt(id).angebot) { S.angebotSetzen(id, null); meldung('Angebot beendet'); }
         inp.value = ''; return;
       }
-      if (wert >= S.produkt(id).normalPreis) { inp.value = ''; meldung('Das Angebot muss günstiger als der normale Preis sein'); return; }
+      if (S.produkt(id).normalPreis == null || wert >= S.produkt(id).normalPreis) { inp.value = ''; meldung('Das Angebot muss günstiger als der normale Preis sein'); return; }
       S.angebotSetzen(id, wert); meldung('Angebot gespeichert – Kunden sehen es sofort');
     }));
     ziel.querySelectorAll('[data-sortiment]').forEach(cb => cb.addEventListener('change', () => {
@@ -326,7 +326,7 @@
 
   function finanzen(ziel) {
     const plan = finanzPlan;
-    const r = window.PICKD_FINANZEN_RECHNEN(plan, window.PICKD_PRODUKTE);
+    const r = window.PICKD_FINANZEN_RECHNEN(plan);
     const gewaehlt = r.szenarien[plan.gewaehltesSzenario];
     const be = r.breakEven;
     const beText = isFinite(be) ? Math.ceil(be) : '–';
@@ -465,10 +465,9 @@
         <div class="box abschnitt">
           <h2 style="margin-bottom:10px">Sortiment im Pilot</h2>
           <p class="klein" style="margin:0 0 8px">${plan.sortiment.filter(s => s.gewicht > 0).length} Produkte, alle gleich gewichtet. Ø Verkauf ${S.euro(r.oNetto)}, Ø Einkauf ${S.euro(r.oEinkauf)} (netto).</p>
-          <ul class="hinweis-liste">${plan.sortiment.filter(s => s.hinweis).map(s => {
-            const p = window.PICKD_PRODUKTE.find(x => x.id === s.id);
-            return `<li><span class="status ${s.gewicht ? 'fast' : 'leer'}">${s.gewicht ? 'prüfen' : 'nicht dabei'}</span><span><strong>${S.esc(p ? p.name : s.id)}</strong> – ${S.esc(s.hinweis)}</span></li>`;
-          }).join('')}</ul>
+          <ul class="hinweis-liste">${plan.sortiment.filter(s => s.hinweis).map(s =>
+            `<li><span class="status ${s.gewicht ? 'fast' : 'leer'}">${s.gewicht ? 'prüfen' : 'nicht dabei'}</span><span><strong>${S.esc(s.name)}</strong> – ${S.esc(s.hinweis)}</span></li>`).join('')}</ul>
+          <p class="leise klein">Gerechnet mit dem Sortiment aus der Excel-Datei (19 Produkte). Das neue 38er-Sortiment ist noch nicht eingerechnet, weil Preise fehlen.</p>
         </div>
         <div class="box abschnitt">
           <h2 style="margin-bottom:10px">Noch offen im Finanzplan</h2>

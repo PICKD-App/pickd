@@ -284,10 +284,10 @@
     const n = p.naehrwerte;
     const faktor = p.portion / 100;
     const einheit100 = p.einheit === 'ml' ? '100 ml' : '100 g';
-    const zeilen = [
+    const zeilen = n ? [
       ['Energie', n.kcal, 'kcal', true], ['Fett', n.fett, 'g'], ['Kohlenhydrate', n.kohlenhydrate, 'g'],
       ['davon Zucker', n.zucker, 'g'], ['Eiweiß', n.eiweiss, 'g', true], ['Salz', n.salz, 'g']
-    ];
+    ] : [];
     const hier = aktuellerAutomat ? S.bestand(aktuellerAutomat, id) : null;
     const andere = S.alleAutomaten().filter(a => a.id !== aktuellerAutomat && S.sortiment(a.id).includes(id));
 
@@ -302,13 +302,14 @@
       </div>
       ${S.labelsHtml(p)}
       <h3>Nährwerte</h3>
-      <table class="tabelle">
+      ${n ? `<table class="tabelle">
         <thead><tr><th><span class="sr-only">Nährwert</span></th><th class="zahl">pro ${einheit100}</th><th class="zahl">pro Packung (${S.portionText(p)})</th></tr></thead>
         <tbody>${zeilen.map(([name, wert, e, hervor]) => `
           <tr class="${hervor ? 'hervor' : ''}"><td>${name}</td><td class="zahl">${S.zahl(wert)} ${e}</td><td class="zahl">${S.zahl(wert * faktor)} ${e}</td></tr>`).join('')}
         </tbody>
       </table>
-      <p class="quelle ${p.geprueft ? '' : 'ungeprueft'}">Quelle: ${S.esc(p.quelle)}${p.geprueft ? '' : ' (Richtwert)'}</p>
+      <p class="quelle ${p.geprueft ? '' : 'ungeprueft'}">Quelle: ${S.esc(p.quelle)}${p.geprueft ? '' : ' (Richtwert)'}</p>`
+      : `<p class="nw-folgen">Nährwerte folgen – das Produkt ist neu im Sortiment.${p.highProteinLautHersteller ? ' „High Protein“ laut Hersteller.' : ''}</p>`}
       ${andere.length ? `<h3>${aktuellerAutomat ? 'Auch erhältlich in' : 'Erhältlich in'}</h3>
         <ul class="verfuegbar-liste">${andere.map(a => `
           <li><a href="#/automat/${a.id}" data-dialog-schliessen>${S.typen[a.typ].emoji} ${S.esc(a.name)} ${S.statusHtml(S.bestand(a.id, id))}</a></li>`).join('')}
